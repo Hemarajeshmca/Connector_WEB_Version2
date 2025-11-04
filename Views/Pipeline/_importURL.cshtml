@@ -1,0 +1,582 @@
+﻿@model Connection
+@{
+
+}
+<style>
+    .btn-danger:hover, .btn-danger:active, .btn-danger.hover {
+        background-color: #ac2925 !important;
+    }
+
+    .fullscreen-modal .modal-dialog {
+        margin: 0; /* remove default centering margins */
+        height: 72vh; /* full viewport height */
+        display: flex;
+        align-items: stretch; /* stretch vertically */
+        width: 72%;
+    }
+
+    .fullscreen-modal .modal-content {
+        height: 72vh; /* force content to fill */
+        border-radius: 0; /* optional: remove rounded corners */
+        width: 72%;
+        top: 120px !important;
+        left: 300px !important;
+    }
+
+
+</style>
+<div class="modal" tabindex="-1" role="dialog" id="importurl_Popup" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="dialog">
+        <div class="modal-content" style="width: 75%;left: 0%;box-shadow:0 0 8px 8px rgba(153, 153, 153, 0.8) !important">
+            <div class="modal-body" style="margin-top: -15%;margin-left: 3%;margin-right: 3%;">
+                <div class="row">
+                    <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Import URL</h4>
+                </div>
+                <div class="row">
+                    <label class="form-label">Paste URL, Raw text or URL...</label>
+                    <input class="form-control" type="text" id="url" name="url" />
+                </div>
+                <div class="row">
+                    <form id="theuploadformempff">
+                        <div class="form-group">
+                            <label for="Filename" class="form-label">Select Files to Import<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input type="file" class="form-control input-lg browse btn btn-primary input-lg" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+                            <label class="col-md-6 control-label" id="FileName" hidden></label>
+                        </div>
+                    </form>
+               </div>
+                <div class="row">
+                    <textarea style="width: 100%; height: 150px; font-size: 16px; padding: 10px; border-radius: 5px;" id="shortText" name="shortText" rows="4" cols="50" maxlength="100"></textarea>
+                 </div>
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                     <button type="button" onclick="cancel()" class="btn btn-sm btn-danger btns">Cancel</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" onclick="confirm()" class="btn btn-sm btn-primary btns">Import</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fullscreen-modal" tabindex="-1" role="dialog" id="authurl_Popup" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Auth URL</h4>
+                </div>               
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>Method</label>                        
+                            <select id="txt_auth_method" class="form-control">
+                            <option selected value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-10">
+                    <label class="form-label">Auth Url</label>
+                    <input class="form-control" type="text" id="txt_auth_url" name="url" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Token Key Name</label>
+                        <input class="form-control" type="text" id="txt_token_key" name="url" />
+                    </div>
+                <div class="row" style="margin-top: 20px;margin-left: 2px;">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#authhome">Params</a></li>                       
+                        <li><a data-toggle="tab" href="#auth_menu1">Headers</a></li>
+                        <li><a data-toggle="tab" href="#auth_menu2">Body</a></li>
+                        <li><a data-toggle="tab" href="#auth_menu3">Response</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="authhome" style="padding: 0px;" class="tab-pane fade in active">
+                            <div class="col-xs-12" style="margin-top:10px;margin-left: -16px;">
+                                <table id="paramTable" class="table table-bordered table-sm" style="margin-bottom: 0px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div style="max-height: 300px; overflow-y: auto; height: 100px;">
+                                    <table class="table table-bordered table-sm">
+                                        <tbody id="auth_table-body">
+                                            <tr>
+                                                <td><input type="text" id="key" class="form-control" /></td>
+                                                <td><input type="text" id="value" class="form-control" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div id="auth_menu1" class="tab-pane fade">
+                            <div class="col-xs-12" style="margin-top:10px;padding:0px;width:95%;">
+                                <table class="table table-bordered table-sm" style="margin-bottom: 0px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Value</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div style="max-height: 300px; overflow-y: auto; height: 100px;">
+                                    <table class="table table-bordered table-sm">
+                                        <tbody id="auth_headerTableBody"> </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="auth_menu2" class="tab-pane fade">                                           
+                                <div class="col-sm-12" style="margin-top:10px;width: 96%;">
+                                    <textarea style="height: 22vh;" class="form-control" rows="5" id="auth_comment" name="text"></textarea>
+                                </div>                            
+                        </div>
+                        <div id="auth_menu3" style="padding: 0px;" class="tab-pane fade">
+                            <div class="col-sm-12" style="margin-top:10px;width: 96%;">
+                                <textarea style="height: 22vh;" class="form-control" rows="10" id="auth_response" name="text"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" style="display: flex;flex-direction: row-reverse;gap: 13px;">
+                        <button type="button" onclick="cancelauth()" class="btn btn-sm btn-danger btns">Cancel</button>
+                        <button type="button" onclick="validateauthurl('Yes')" class="btn btn-sm btn-primary btns">Validate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      addAuthHeaderRow();
+      const authUrlInput = document.getElementById("txt_auth_url");
+      const paramsTableBody = document.getElementById("auth_table-body");
+
+      // ========== add a param row ==========
+      function addAuthParamRow(key = "", value = "") {
+        const tr = document.createElement("tr");
+         tr.innerHTML = `
+                <td><input type="text" class="form-control key" value="${key}"></td>
+                <td><input type="text" class="form-control val" value="${value}"></td>
+            `;
+            tr.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('input', () => authParamChanged(inp));
+            });
+            paramsTableBody.appendChild(tr);
+            return tr;       
+      }
+
+        function authParamChanged(inputEl) {
+            const row = inputEl.closest('tr');
+            const key = row.querySelector('.key').value.trim();
+            const val = row.querySelector('.val').value.trim();
+            const lastRow = paramsTableBody.lastElementChild;
+            if (row === lastRow && (key !== '' || val !== '')) {
+                addAuthParamRow();
+            }
+            updateAuthUrlFromTable();
+          }
+
+        function updateAuthUrlFromTable() {
+            const base = authUrlInput.dataset.baseUrl || (authUrlInput.value.includes('?')
+                ? authUrlInput.value.split('?')[0]
+                : authUrlInput.value.split('?')[0] || '');
+
+            const params = new URLSearchParams();
+            Array.from(paramsTableBody.querySelectorAll('tr')).forEach(row => {
+                const key = row.querySelector('.key').value.trim();
+                const val = row.querySelector('.val').value;
+                if (key !== '') {
+                params.set(key, val);
+                }
+            });
+
+            const qs = params.toString();
+            authUrlInput.value = qs ? `${base}?${qs}` : base;
+        }
+             let authUrlParseTimeout;
+        function urloninput() {
+            clearTimeout(authUrlParseTimeout);
+            authUrlParseTimeout = setTimeout(() => {
+                const full = authUrlInput.value.trim();
+                paramsTableBody.innerHTML = '';
+                let base = '';
+                let queryString = '';
+                if (full.includes('?')) {
+                [base, queryString] = full.split('?');
+                const params = new URLSearchParams(queryString || '');
+                params.forEach((val, key) => addAuthParamRow(key, val));
+                }
+
+                authUrlInput.dataset.baseUrl = base || (full && !full.includes('?') ? full : '');
+                    if (paramsTableBody.children.length === 0) addAuthParamRow('', '');
+                        const last = paramsTableBody.lastElementChild;
+                        if (last) {
+                            const k = last.querySelector('.key').value.trim();
+                            const v = last.querySelector('.val').value.trim();
+                            if (k !== '' || v !== '') addAuthParamRow('', '');
+                        }
+                    }, 200);
+            }
+                urloninput();
+                authUrlInput.addEventListener('input', urloninput);
+     });
+
+   
+       function addAuthHeaderRow(key = "", value = "", desc="") {
+        const tableBody = document.getElementById("auth_headerTableBody");
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>
+                <input type="text" class="form-control headerKey"
+                       value="${key}"
+                       oninput="authHeaderChanged(this)">
+            </td>
+            <td>
+                <input type="text" class="form-control headerVal"
+                       value="${value}"
+                       oninput="authHeaderChanged(this)">
+            </td>
+             <td>
+                <input type="text" class="form-control headerDesc"
+                        value="${desc}"
+                        oninput="authHeaderChanged(this)">
+            </td>
+        `;
+        tableBody.appendChild(row);
+    }
+
+      function authHeaderChanged(inputEl) {
+        const row = inputEl.closest("tr");
+        const key = row.querySelector(".headerKey").value.trim();
+        const val = row.querySelector(".headerVal").value.trim();
+        const desc = row.querySelector(".headerDesc").value.trim();
+
+        const tableBody = document.getElementById("auth_headerTableBody");
+        const lastRow = tableBody.lastElementChild;
+        if (row === lastRow && (key !== "" || val !== "" || desc !== "")) {
+            addAuthHeaderRow();
+        }
+    }
+
+    function validateauthurl(in_type){
+         const payload = buildauthPayload();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CallExternalApi", "Pipeline")',
+            dataType: "json",
+            data: JSON.stringify(payload),
+            contentType : 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response.error) {
+                    loadapigrid([]);
+                        if(in_type == "Yes") {
+                        jAlert(response.error, "Connector");
+                    }
+                    return;
+                }
+                $("#auth_response").val(JSON.stringify(response, null, 2));
+            },
+            error: function (xhr) {                  
+                    var errObj;
+                    try {
+                        errObj = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        errObj = { error: "Unexpected error", content: xhr.responseText };
+                    }
+                        if(in_type == "Yes") {
+                                jAlert(errObj.error + " (" + errObj.statusCode + ")", "Error");
+                        }                    
+                }
+        });
+    }
+
+    function buildauthPayload(){
+         const authHeaders = {};
+        const rows = document.querySelectorAll("#auth_headerTableBody tr");
+        rows.forEach(row => {
+            const key = row.querySelector(".headerKey")?.value.trim();
+            const val = row.querySelector(".headerVal")?.value.trim();
+            if (key && val) {
+                authHeaders[key] = val;
+            }
+        });
+
+        const payload = {
+             url: $("#txt_auth_url").val(),
+             method: $("#txt_auth_method").val(),
+             body: $("#auth_comment").val(),
+             headers: authHeaders
+        };
+        return payload;
+    }
+
+</script>
+
+<script>
+    function cancel(){
+        $("#importurl_Popup").hide();
+    }
+
+        function cancelauth(){
+             $("#authurl_Popup").hide();
+        }
+
+     document.getElementById('File_Import').addEventListener('change', function(event) {
+        const file = event.target.files[0]; 
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('shortText').value = e.target.result;
+            };
+            reader.readAsText(file);
+            cleardata();
+        }
+    });
+
+//      function confirm() {
+//             const curlCommand = document.getElementById('shortText').value; // Get the content of the textarea
+//                 // if (curlCommand.trim() === "") {
+//                 //     alert("Textarea is empty. Please enter data.");
+//                 //     return;
+//                 // }
+//                     let urlObj = "";
+//                     let params = "";
+//                 const method = "GET";
+//             const urlMatch = curlCommand.match(/'(http[^']+)'/);
+//             const url = urlMatch ? urlMatch[1] : '';
+//             if(url) {
+//                 try{
+//                    urlObj = new URL(url);
+//                     params = new URLSearchParams(urlObj.search);
+//                     }catch (error) {
+//             console.error("Failed to construct URL: ", error);
+//         }
+//             } else{
+//                     console.error("URL not found in curlCommand");
+//             }
+            
+
+//             // header
+//                 const headerRegex = /--header\s+'([^:]+):\s*(.+?)'/g;
+//                 let matchHeader;
+//                 const headers = {};
+//                 // Extract headers
+//                         while ((matchHeader = headerRegex.exec(curlCommand)) !== null) {
+//                         const key = matchHeader[1].trim();
+//                         const value = matchHeader[2].trim();
+//                     headers[key] = value;
+//                 }
+           
+//             // data
+//                    const regex = /--data '({.*})'/;
+//                    const matchData = curlCommand.match(regex);
+//                    if (matchData) {
+//                         const dataPart = matchData[1];
+//                          const radioButton = document.getElementById('filter-raw');
+//                          radioButton.checked = true;
+//                          const rawDiv = document.getElementById('raw');
+//                          rawDiv.style.display = 'block';
+//                          const jsonOption = document.getElementById('rawoptions');
+//                          jsonOption.style.display = 'block';
+//                          $('#sel_data').val("Json");
+//                          $('#comment').val(dataPart);
+//                         } 
+
+//             $('#sel').val(method);
+//             $('#url').val(urlObj.origin + urlObj.pathname);
+//             $('#url').val(urlObj.origin + urlObj.pathname);
+//             const tableBody = document.getElementById('table-body');
+//             tableBody.innerHTML = '';
+
+//             if (params.toString()) {
+//             // Loop through each key-value pair in the URLSearchParams
+//             for (const [key, value] of params.entries()) {
+//                 // Create a new row element
+//                 const newRow = document.createElement('tr');
+
+//                 // Create cells for key, value, and description
+//                 const keyCell = document.createElement('td');
+//                 const valueCell = document.createElement('td');
+//                 const descCell = document.createElement('td');
+
+//                 // Create input elements for each cell and set their values
+//                 const keyInput = document.createElement('input');
+//                 keyInput.type = 'text';
+//                 keyInput.className = 'form-control';
+//                 keyInput.value = key;
+
+//                 const valueInput = document.createElement('input');
+//                 valueInput.type = 'text';
+//                 valueInput.className = 'form-control';
+//                 valueInput.value = value;
+
+
+
+//                 const descInput = document.createElement('input');
+//                 descInput.type = 'text';
+//                 descInput.className = 'form-control';
+//                 descInput.value = '';
+
+//                 // Append the inputs to the respective cells
+//                 keyCell.appendChild(keyInput);
+//                 valueCell.appendChild(valueInput);
+//                 descCell.appendChild(descInput);
+
+//                 // Append the cells to the row
+//                 newRow.appendChild(keyCell);
+//                 newRow.appendChild(valueCell);
+//                 newRow.appendChild(descCell);
+
+//                 // Append the row to the table body
+//                 tableBody.appendChild(newRow);
+//                 }
+//             }
+//             else {
+//                 console.log("No query parameters found in the URL");
+//             }
+   
+//             const headerTableBody = document.getElementById("headerTableBody");
+
+//             Object.entries(headers).forEach(([key, value]) => {
+//             const row = document.createElement("tr");
+
+//             const keyCell = document.createElement("td");
+//             keyCell.textContent = key;
+
+//             const valueCell = document.createElement("td");
+//             valueCell.textContent = value;
+
+//             const descriptionCell = document.createElement("td");
+//             descriptionCell.textContent = "";  // You can modify this as needed
+
+//             row.appendChild(keyCell);
+//             row.appendChild(valueCell);
+//             row.appendChild(descriptionCell);
+
+//             headerTableBody.appendChild(row);
+//             if(key == 'Authorization' || key == 'authorization'){
+//                  if(value.startsWith("Bearer ")) {
+//                      $('#sel_auth').val("bearer");
+//                  } else {
+//                      $('#sel_auth').val("select");
+//                  }
+//                }
+//         });
+
+//         cancel();
+
+// }
+
+//     function cleardata(){
+//                 $('#sel').val("");
+//                 $('#url').val("");
+//                 $('#url').val("");
+//                 $('#sel_auth').val("");
+//                 $('#sel_data').val("");
+//                 $('#comment').val("");
+//                 const tableBody = document.getElementById('table-body');
+//     const headerTableBody = document.getElementById("headerTableBody");
+//     tableBody.innerHTML = '';
+//     headerTableBody.innerHTML = '';   
+//    }
+
+//        function saveauthurl(){
+//             var url = $('#txt_auth_url').val();
+//             $.ajax({
+//                 type: "GET",
+//                     url: '@Url.Action("getAPIResponse", "Pipeline")?url=' + encodeURIComponent(url),
+//                 dataType: "json",
+//                 contentType : 'application/json; charset=utf-8',
+//                 success: function (response) {
+//                     if (response.error) {                        
+//                         return;
+//                         } else if (response.token) {
+//                                 $('#txt_auth_token').val(response.token);
+//                                 saveauthapiheader();
+//                             }else {
+//                        // apiresponse_structure(response, "No");
+                        
+//                     }
+//                    },
+//                 error: function (er) {
+//                     jAlert(er.message, "Error");
+//                 }
+//             });
+//        }
+
+//        function saveauthapiheader(){
+//                  var pipelineCode = $("#txt_ppl_code").val();
+//                     var current_date = new Date;
+//                     var pplapigid = $('#txt_api_gid').val();
+//                     var data = {};
+//                         data.pipeline_code = pipelineCode;
+//                         data.api_url = $('#url').val();
+//                         data.json_response = $('#txt_apiResponse').val();
+//                         data.auth_url = $('#txt_auth_url').val();
+//                         data.auth_user_name = $('#txt_auth_user_name').val();
+//                         data.auth_user_pswd = $('#txt_auth_user_pswd').val();
+//                         data.auth_token = $('#txt_auth_token').val();
+//                         data.remarks = "";
+//                         data.delete_flag = "N";
+//                         if(pplapigid == "") {
+//                             data.api_gid = "0";
+//                             data.created_date = current_date;
+//                             data.created_by = _user_code;
+//                               $.ajax({
+//                               type: "Post",
+//                               url: '@Url.Action("Addnewpplapiheader", "Pipeline")',
+//                               data: JSON.stringify(data),
+//                               dataType: "json",
+//                               contentType: 'application/json; charset=utf-8',
+//                               success: function (response) {
+//                                   if (response == "Record Inserted Successfully") {
+//                                       fetchpplapiheader();
+//                                       jAlert("Validated Succesfully ..!", "Error");
+//                                   }
+//                               },
+//                               error: function (er) {
+//                                   jAlert(er, "Error");
+//                               }
+//                           });
+//                         } else {
+//                             data.api_gid = pplapigid;
+//                              data.updated_date = current_date;
+//                              data.updated_by = _user_code;
+//                             $.ajax({
+//                               type: "Post",
+//                               url: '@Url.Action("Updateexistingpplapiheader", "Pipeline")',
+//                               data: JSON.stringify(data),
+//                               dataType: "json",
+//                               contentType: 'application/json; charset=utf-8',
+//                               success: function (response) {
+//                                   if (response == "Record Updated Successfully") {
+//                                       fetchpplapiheader();
+//                                       jAlert("Validated Succesfully ..!", "Error");
+//                                   }
+//                               },
+//                               error: function (er) {
+//                                   jAlert(er, "Error");
+//                               }
+//                           });
+//                         }
+//        }
+</script>
