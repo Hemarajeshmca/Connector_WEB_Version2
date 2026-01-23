@@ -326,7 +326,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-8" style="padding-left: 0px;">
+                    <div class="col-sm-8" id="div_scheduler_path" style="padding-left: 0px;">
                         <label class="form-label">File Path</label>
                         <span class="mandatory" style="display:none;">*</span>                        
                         <input class="form-control" id="txt_filePath" style="width: 98%;" type="text" name="txt_filePath" />
@@ -416,19 +416,18 @@
             jAlert("Please enter a month ", "Connector");
             return;
         }
-        // else if (_dayweek == "") {
-        //     jAlert("Please enter a dayweek ", "Connector");
-        //     return;
-        // }
-        else if(_file_path == "") {
+        else if(_file_path == "" && $("#txt_source_db_type").val() != "API") {
             jAlert("Please enter file path ", "Connector");
             return;
         }
         var cron_express = $("#txt_cronexpression").val();
-        if (cron_express != "") {
-            $("#txt_cronexpr").val(cron_express);
+        if (cron_express != "") {            
+            if($("#txt_source_db_type").val() == "API"){
+                $("#api_txt_cronexpr").val(cron_express);
+            } else {
+                $("#txt_cronexpr").val(cron_express);
+            }
             CloseCronExpression();
         }
-
     }
 </script>

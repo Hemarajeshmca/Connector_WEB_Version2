@@ -1,0 +1,394 @@
+﻿@model Connection
+@{
+
+}
+<style>
+    .modal-custom {
+        max-width: 95% !important;
+        width: 95%;
+        margin: 14% !important;
+    }
+</style>
+<div class="modal" tabindex="-1" role="dialog" id="parentChild_Popup" aria-hidden="true">
+    <div class="modal-dialog modal-custom" role="dialog">
+        <div class="modal-content" style="width: 75%;left: 0%;box-shadow:0 0 8px 8px rgba(153, 153, 153, 0.8) !important;height: 73vh;top: 10px;">
+            <div class="modal-body" style="margin-top: -15%;margin-left: 3%;margin-right: 3%;">
+                <div class="row">
+                    <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Parent Child Relation</h4>
+                </div>
+                <div class="row">
+                    <label id="lbl_parentDS" style="color:brown;"> </label>
+                </div>  
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="row">
+                            <label class="form-label">Child Dataset</label>
+                            <span style="display:inline;" class="mandatory">*</span>
+                                <select class="form-control" onchange="getChildFieldList($('#drp_child_dataset').val())" id="drp_child_dataset" name="drp_child_dataset" style="width:100%;height:25%">
+                                <option value="-- Select --">-- Select --</option>
+                                <option value="Order_Details">Order Details</option>
+                                <option value="Invoice_Details">Invoice Details</option>
+                                <option value="PO_Order">PO Order</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div id="mapped_ds_grid"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div id="pc_mappingGrid"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 11px;">
+                    <input style="float: right;margin-top: 0%;" type="button" onclick="closeMappings()" class="cancel action-button-previous" value="Cancel" />
+                    <input style="float: right;margin-right: 0%;" type="button" onclick="saveMappings()" class="save" value="Save" />
+                    <input style="float: right;margin-right: 1%; margin-top: 1px;" type="button" onclick="deleteMappings()" class="cancel" value="Delete" />
+                </div>            
+            </div>
+            </div>
+
+    @*     <div class="modal-footer">
+            <div style="margin-top: 2%;">
+                <input style="float: right;margin-top: 0%;" type="button" onclick="closeMappings()" class="cancel action-button-previous" value="Cancel" />
+                <input style="float: right;margin-right: 0%;" type="button" onclick="saveMappings()" class="save" value="Save" />
+            </div>
+            </div>
+        </div> *@
+
+    </div>
+</div>
+
+
+<script>
+
+    var parentDatasets = [
+        { id: "ORD", name: "Order" },
+        { id: "INV", name: "Invoice" },
+        { id: "PO", name: "Purchase Order" }
+    ];
+
+    var childDatasets = [
+        { id: "ORD_DTL", parentId: "ORD", name: "Order Details" },
+        { id: "INV_DTL", parentId: "INV", name: "Invoice Details" },
+        { id: "PO_DTL", parentId: "PO", name: "PO Details" }
+    ];
+
+    function closeMappings() {
+        $("#parentChild_Popup").hide();
+    }
+
+    function pcRelationlistgrid(data) {
+        try {
+            $("#PC_relationListGrid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                parent_child_gid: { type: "string" },
+                                pipeline_code: { type: "string" },
+                                parent_dataset_code: { type: "string" },
+                                parent_dataset_name: { type: "string" },
+                                child_dataset_code: { type: "string" },
+                                child_dataset_name: { type: "string" },
+                                parent_keyfield: { type: "string" },
+                                child_keyfield: { type: "string" },
+                            }
+                        }
+                    },
+                    pageSize: 10
+                },
+                dataBound: function () {
+                    mergeGridColumn(this, "child_dataset_name");
+                },
+                height: 200,
+                width: 1058,
+                pageable: true,
+                sortable: true,
+                filterable: true,
+                selectable: "single",
+                columns: [
+                    {
+                        field: "Action",
+                        title: "Action",
+                        template: function (dataItem) {                            
+                                return `<div style='text-align:center;'>
+                                <i class='glyphicon glyphicon-pencil' style='color:green;cursor: pointer;' onclick='editpipeline($(this))' title='Edit'></i> &nbsp
+                                <i class='glyphicon glyphicon-trash' style='color:red;cursor: pointer;' onclick='deletepipeline($(this))' title='Delete'></i> &nbsp
+                                </div>`;                            
+                        },
+                        filterable: false,
+                        sortable: false,
+                        width: 30,
+                    },
+                    {
+                        field: "pipeline_code",
+                        title: "pipeline_code",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "parent_dataset_code",
+                        title: "parent_dataset_code",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "parent_dataset_name",
+                        title: "parent_dataset_name",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "child_dataset_code",
+                        title: "child_dataset_code",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "child_dataset_name",
+                        title: "Child Dataset",
+                        width: 100,
+                    },
+                    {
+                        field: "parent_keyfield",
+                        title: "Parent Key Field",
+                        width: 100,
+                    },
+                    {
+                        field: "child_keyfield",
+                        title: "Child Key Field",
+                        width: 100,
+                    }],
+                resizable: true
+
+            });           
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    function mergeGridColumn(grid, fieldName) {
+        var rows = grid.tbody.find("tr");
+        var prevCell = null;
+        var span = 1;
+
+        rows.each(function () {
+            var cell = $(this).find("td:eq(" + getColumnIndex(grid, fieldName) + ")");
+
+            if (prevCell && cell.text() === prevCell.text()) {
+                span++;
+                prevCell.attr("rowspan", span);
+                cell.hide();
+            } else {
+                prevCell = cell;
+                span = 1;
+            }
+        });
+    }
+
+    function getColumnIndex(grid, fieldName) {
+        var index = -1;
+        grid.columns.forEach(function (col, i) {
+            if (col.field === fieldName) {
+                index = i;
+            }
+        });
+        return index;
+    }
+
+    function getdata(){
+      var data = [
+      {
+        "parent_child_gid": "1",
+        "pipeline_code": "PIPE_0584",
+        "parent_dataset_code": "DS566",
+        "parent_dataset_name": "Invoice Header New",
+        "child_dataset_code": "DS567",
+        "child_dataset_name": "Order Details",
+        "parent_keyfield": "location_no",
+        "child_keyfield": "location number"
+      },
+      {
+        "parent_child_gid": "2",
+        "pipeline_code": "PIPE_0584",
+        "parent_dataset_code": "DS566",
+        "parent_dataset_name": "Invoice Header New",
+        "child_dataset_code": "DS567",
+        "child_dataset_name": "Invoice Details",
+        "parent_keyfield": "Invoice_Date",
+        "child_keyfield": "Tran Date"
+      },
+      {
+        "parent_child_gid": "3",
+        "pipeline_code": "PIPE_0584",
+        "parent_dataset_code": "DS567",
+        "parent_dataset_name": "Invoice Details",
+        "child_dataset_code": "DS568",
+        "child_dataset_name": "PO Order",
+        "parent_keyfield": "location number",
+        "child_keyfield": "location number"
+      },
+      {
+        "parent_child_gid": "4",
+        "pipeline_code": "PIPE_0584",
+        "parent_dataset_code": "DS567",
+        "parent_dataset_name": "Invoice Details",
+        "child_dataset_code": "DS568",
+        "child_dataset_name": "PO Order",
+        "parent_keyfield": "invoiceDate",
+        "child_keyfield": "Po Date"
+      }  ,
+      {
+        "parent_child_gid": "5",
+        "pipeline_code": "PIPE_0584",
+        "parent_dataset_code": "DS567",
+        "parent_dataset_name": "Invoice Details",
+        "child_dataset_code": "DS568",
+        "child_dataset_name": "PO Order",
+        "parent_keyfield": "Po status",
+        "child_keyfield": "status"
+      }
+    ];
+      return data;
+    }
+
+    function getChildFieldList(CDS){
+        loadRSGrid();
+    }
+
+    function loadRSGrid(){
+       $("#ds_gridmapping").remove();
+       $('#pc_mappingGrid').append('<div id="ds_gridmapping" style="height: 300px;"></div>');
+       $("#ds_gridmapping").kendoGrid({
+        dataSource: {
+            data: [{
+                parent_dataset: "",
+                child_dataset: "",
+                field_mapped: "N"
+            }],
+            schema: {
+                model: {
+                    id: "id",
+                    fields: {
+                        field_mapped: { type: "string" },
+                        parent_dataset: { type: "string" ,editable: true },
+                        child_dataset: { type: "string" ,editable: true },
+                    }
+                }
+            }
+        },       
+         toolbar: "<a href='javascript:void(0)' onclick='addPCFieldRow()' >" +
+                   "<span class='glyphicon glyphicon-plus' style='color: white !important;'></span></a>",
+        editable: true,
+        columns: [
+             {
+                field: "field_mapped",
+                title: "Enable",
+                filterable: false,
+                template: function (dataItem) {
+                   return '<input style="text-align:center;" type="checkbox" class="chkbxFieldmapping" ' + ((dataItem.field_mapped == "Y")  ? 'checked="checked"' : '') + '/>'
+                },
+                width: 30
+             },
+            {
+                field: "parent_dataset",
+                title: "Parent Dataset",
+                editor: parentDatasetEditor,              
+            },
+            {
+                field: "child_dataset",
+                title: "Child Dataset",
+                editor: childDatasetEditor,               
+            },
+           
+        ]
+    });
+    }
+
+    function loadmappedDSGrid(){       
+       $("#grid_mappedDS").remove();
+       $('#mapped_ds_grid').append('<div id="grid_mappedDS" style="height: 220px; margin-top: 20px;"></div>');
+       $("#grid_mappedDS").kendoGrid({
+        dataSource: {
+            data: [{
+                parent_dataset: "Invoice Dataset",
+                child_dataset: "",
+                field_mapped: "N"
+            }],
+            schema: {
+                model: {
+                    id: "id",
+                    fields: {
+                        field_mapped: { type: "string"},
+                        parent_dataset: { type: "string"},
+                        child_dataset: { type: "string"},
+                    }
+                }
+            }
+        },        
+        columns: [            
+            {
+                field: "parent_dataset",
+                title: "Mapped Child Dataset",
+            },
+        ]
+    });
+    }
+
+    function parentDatasetEditor(container, options) {
+        var select = $("<select name='" + options.field + "' class='k-input k-textbox' style='width:100%'></select>");
+        select.append("<option value=''>-- Select Parent --</option>");
+        $.each(parentDatasets, function (i, item) {
+            select.append("<option value='" + item.id + "'>" + item.name + "</option>");
+        });
+        select.appendTo(container);
+        // set existing value (edit mode)
+        select.val(options.model[options.field]);
+        // clear child when parent changes
+        select.on("change", function () {
+            options.model.set("child_dataset", "");
+        });
+    }
+
+    function childDatasetEditor(container, options) {
+        var parentValue = options.model.parent_dataset;
+        var select = $("<select name='" + options.field + "' class='k-input k-textbox' style='width:100%'></select>");
+        select.append("<option value=''>-- Select Child --</option>");
+        $.each(childDatasets, function (i, item) {
+            if (item.parentId === parentValue) {
+                select.append("<option value='" + item.id + "'>" + item.name + "</option>");
+            }
+        });
+        select.appendTo(container);
+        // set existing value
+        select.val(options.model[options.field]);
+    }
+
+    function addPCFieldRow() {
+          var parent_dscode = $("#txtds_code").val();
+          var ppl_code = $("#txt_ppl_code").val();
+          var grid = $("#ds_gridmapping").data("kendoGrid");
+          var dataSource = grid.dataSource;    
+          var newRow = dataSource.add({             
+              parent_dataset: "",
+              child_dataset: "",              
+          });
+          newRow.dirty = true;
+          dataSource.sync();
+          grid.refresh();
+          var lastRow = grid.tbody.find("tr").last();
+          grid.editRow(lastRow);
+      }
+
+    function deleteMappings(){
+
+    }
+  
+       
+
+
+</script>

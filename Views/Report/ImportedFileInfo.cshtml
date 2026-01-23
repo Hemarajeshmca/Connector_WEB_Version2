@@ -32,7 +32,7 @@
         <div class="row" style="height:auto;">
             <div class="col-md-12">
                 @*<div class="content-wrapper" style="padding:10px;">*@
-                <div style="padding:10px; margin-top: 30px;">
+                <div style="padding:10px;">
                     <div class="row" style="padding-bottom: 10px;">
                         <div class="col-md-4 font-bold text-2xl">
                             FILE IMPORT INFO
@@ -195,6 +195,7 @@
                             fields: {
                                 pipeline_code_name: { type: "string" },
                                 dataset_code_name: { type: "string" },
+                                run_type: { type: "string" },
                                 file_name: { type: "string" },
                                 scheduler_start_date: { type: "string" },
                                 scheduler_end_date: { type: "string" },
@@ -220,6 +221,7 @@
                 columns: [
                     { field: "pipeline_code_name", title: "Pipeline Code & Name", width: 200 },
                     { field: "dataset_code_name", title: "Dataset Code & Name", width: 200 },
+                    { field: "run_type", title: "Run Type", width: 100 },
                     { field: "file_name", title: "File Name", width: 200 },
                     { field: "scheduler_start_date", title: "Scheduler start Date", width: 100,
                     template: "#= kendo.toString(kendo.parseDate(scheduler_start_date), 'yyyy-MM-dd HH:mm:ss') #"},

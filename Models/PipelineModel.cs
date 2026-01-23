@@ -29,6 +29,7 @@ namespace FlexicodeConnectors.Models
         public string pplFieldNames { get; set; }
         public string default_value { get; set; }
         public string run_type { get; set; }
+        public string cron_expression { get; set; }
         public string upload_mode { get; set; }
         public string key_field { get; set; }
         public string updated_time_stamp { get; set; }
@@ -238,6 +239,8 @@ namespace FlexicodeConnectors.Models
         public string auth_token { get; set; }
         public string auth_type { get; set; }
         public string remarks { get; set; }
+        public string inclusion_filter_cond { get; set; }
+        public string rejection_filter_cond { get; set; }
         public DateTime created_date { get; set; }
         public string created_by { get; set; }
         public DateTime updated_date { get; set; }
@@ -423,5 +426,20 @@ namespace FlexicodeConnectors.Models
         public Dictionary<string, string> Headers { get; set; }
         // helper to know if body was provided
         public bool HasBody => Body.ValueKind != JsonValueKind.Undefined;
+    }
+
+    public class apinodeModel
+    {
+        public string node { get; set; }
+        public int level { get; set; }
+        public string parent_node { get; set; }
+        public string child_node { get; set; }
+        public string sibling { get; set; }
+    }
+
+    public class apifilterCondition
+    {
+        public string JsonData { get; set; }
+        public string Query { get; set; }
     }
 }

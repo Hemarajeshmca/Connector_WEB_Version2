@@ -21,6 +21,7 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DataTable = System.Data.DataTable;
@@ -1210,6 +1211,7 @@ namespace FlexicodeConnectors.Controllers
 
             return Json(results);
         }
+
 
         [HttpPost]
         public async Task<JsonResult> Updateexistingpplfinalization([FromBody] pplFinalization objupdatepplfinz)
@@ -2654,96 +2656,6 @@ namespace FlexicodeConnectors.Controllers
                 return Json(new { isValid = false, message = "Invalid JSON: " + ex.Message });
             }
         }
-
-
-        [HttpPost]
-        public async Task<IActionResult> CallExternalApi_old([FromBody] ProxyRequest request)
-        {
-            // quick model validation
-            if (request == null) return BadRequest("Request body missing or invalid JSON.");
-            if (string.IsNullOrWhiteSpace(request.Url)) return BadRequest("Url is required.");
-            if (!Uri.TryCreate(request.Url, UriKind.Absolute, out var uri))
-                return BadRequest("Invalid URL. Must be absolute (e.g. http://localhost:4984/login).");
-
-            var method = string.IsNullOrWhiteSpace(request.Method) ? HttpMethod.Get : new HttpMethod(request.Method.ToUpperInvariant());
-            var httpRequest = new HttpRequestMessage(method, uri);
-
-            // Prepare content if request has body and method supports content
-            if (request.HasBody &&
-                (method == HttpMethod.Post || method == HttpMethod.Put || method.Method.Equals("PATCH", StringComparison.OrdinalIgnoreCase)))
-            {
-                string contentString;
-
-                // If the incoming body is a JSON string (double-escaped), unwrap it
-                if (request.Body.ValueKind == JsonValueKind.String)
-                {
-                    contentString = request.Body.GetString() ?? "";
-                    // If that string itself contains JSON, it's already correct as-is.
-                }
-                else
-                {
-                    // convert JsonElement to JSON text
-                    contentString = System.Text.Json.JsonSerializer.Serialize(request.Body);
-                }
-
-                // Determine content-type header from incoming headers (default to application/json)
-                var contentType = "application/json";
-                if (request.Headers != null && request.Headers.TryGetValue("Content-Type", out var inCt))
-                {
-                    contentType = inCt;
-                }
-
-                httpRequest.Content = new StringContent(contentString, Encoding.UTF8, contentType);
-            }
-
-            // Add headers (skip content headers that belong to content)
-            if (request.Headers != null)
-            {
-                foreach (var kv in request.Headers)
-                {
-                    // Try add as normal header; if it fails, it will be content header (we already added content above)
-                    if (!httpRequest.Headers.TryAddWithoutValidation(kv.Key, kv.Value))
-                    {
-                        if (httpRequest.Content == null) httpRequest.Content = new StringContent("");
-                        httpRequest.Content.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
-                    }
-                }
-            }
-
-            // Send and return
-            HttpResponseMessage response;
-            try
-            {
-                response = await _httpClient.SendAsync(httpRequest);
-            }
-            catch (HttpRequestException ex)
-            {
-                // network / connection error
-                return StatusCode(StatusCodes.Status502BadGateway, $"Error contacting remote server: {ex.Message}");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseContentType = response.Content.Headers.ContentType?.ToString() ?? "application/json";
-
-            if (response.IsSuccessStatusCode)
-            {
-                // return content with original content-type
-                return Content(responseContent, responseContentType, Encoding.UTF8);
-            }
-            else
-            {
-                // propagate error with details
-                return StatusCode((int)response.StatusCode, new
-                {
-                    error = "API call failed",
-                    statusCode = response.StatusCode,
-                    content = responseContent // optional, if you want to include server's response
-                });
-            }
-
-            // return Content(responseContent, responseContentType, Encoding.UTF8);
-        }
-
        
         [HttpPost]
         public async Task<IActionResult> CallExternalApi([FromBody] ProxyRequest request)
@@ -2836,5 +2748,114 @@ namespace FlexicodeConnectors.Controllers
             });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> pplapinode(string pipeline_code, string dataset_code, string user_code, [FromBody] List<apinodeModel> objapinode)
+        {
+            var results = "";
+            var json = JsonConvert.SerializeObject(objapinode);
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+            ConnectorApi _api = new ConnectorApi(_configuration);
+            HttpClient client = _api.Initial();
+            // HttpResponseMessage res = await client.PostAsync("Pipeline/pplapinode", stringContent);
+            HttpResponseMessage res = await client.PostAsync("Pipeline/pplapinode?pipeline_code=" + pipeline_code + "&dataset_code=" + dataset_code + "&user_code=" + user_code, stringContent);
+            if (res.IsSuccessStatusCode)
+            {
+                results = res.Content.ReadAsStringAsync().Result;
+            }
+
+            return Json(results);
+        }
+
+        [HttpPost]
+        public IActionResult ValidateApiQuery([FromBody] apifilterCondition request)
+        {
+            if (request == null)
+                return BadRequest("Invalid payload");
+
+            var result = ValidateApiQuery(request.JsonData, request.Query);
+
+            return Ok(new
+            {
+                isValid = result.IsValid,
+                message = result.Message
+            });
+        }
+
+        [HttpPost]
+        public static (bool IsValid, string Message) ValidateApiQuery(string JsonData, string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return (true, "Valid (empty query)");
+
+            HashSet<string> jsonKeys = GetAllJsonKeys(JsonData);
+            HashSet<string> queryColumns = ExtractColumnsFromQuery(query);
+
+            foreach (var col in queryColumns)
+            {
+                if (!jsonKeys.Contains(col))
+                {
+                    return (false, $"Invalid column: {col}");
+                }
+            }
+
+            return (true, "Query Validated Successfully..!");
+        }
+
+        public static HashSet<string> ExtractColumnsFromQuery(string query)
+        {
+            // Remove quoted values ('x' or "x")
+            query = Regex.Replace(query, @"'[^']*'|""[^""]*""", "");
+
+            // Remove operators & keywords
+            query = Regex.Replace(query,
+                @"\b(AND|OR|IN|NOT|IS|NULL|LIKE|BETWEEN)\b",
+                "",
+                RegexOptions.IgnoreCase);
+
+            // Remove numbers
+            query = Regex.Replace(query, @"\b\d+(\.\d+)?\b", "");
+
+            // Remove operators and symbols EXCEPT []
+            query = Regex.Replace(query, @"[=<>!(),]", " ");
+
+            var columns = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+
+            foreach (Match match in Regex.Matches(query, @"\[(.*?)\]|\b[a-zA-Z_][a-zA-Z0-9_]*\b"))
+            {
+                string column = match.Groups[1].Success
+                    ? match.Groups[1].Value   // [status] → status
+                    : match.Value;
+
+                columns.Add(column.Trim());
+            }
+
+            return columns;
+        }
+
+
+        public static HashSet<string> GetAllJsonKeys(string jsonData)
+        {
+            var keys = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+
+            void Traverse(JToken token)
+            {
+                if (token is JObject obj)
+                {
+                    foreach (var prop in obj.Properties())
+                    {
+                        keys.Add(prop.Name);
+                        Traverse(prop.Value);
+                    }
+                }
+                else if (token is JArray arr)
+                {
+                    foreach (var item in arr)
+                        Traverse(item);
+                }
+            }
+
+            Traverse(JToken.Parse(jsonData));
+            return keys;
+        }
     }
 }

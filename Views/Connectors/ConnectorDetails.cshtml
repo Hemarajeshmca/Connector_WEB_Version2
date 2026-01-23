@@ -1101,6 +1101,9 @@
                 } else if($("#txt_source_type").val() == "API") {
                     $("#mysql_div").hide();
                     $("#auth_div").show();
+                } else {
+                    $("#mysql_div").hide();
+                    $("#auth_div").hide();
                 }
                 $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
                 $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
@@ -1112,7 +1115,6 @@
                     step: function (now) {
                         // for making fielset appear animation
                         opacity = 1 - now;
-
                         current_fs.css({
                             'display': 'none',
                             'position': 'relative'
@@ -1323,13 +1325,14 @@
                 data: JSON.stringify(data1),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    if ($('#txt_source_type').val() == "Excel") {
+                    if ($('#txt_source_type').val() == "Excel" || $("#txt_source_type").val() == "CSV") {
                         jAlert("Connector Details Inserted Successfully..!", "Connector", function (e) {
                             if (e == true) {
-                                window.location.href = '@Url.Action("Connectorslist", "Connectors")';// "/Connectors/Connectorslist";
+                                window.location.href = '@Url.Action("Connectorslist", "Connectors")';
                             }
                         });
                     } else if($("#txt_source_type").val() == "API"){
+                        refetch(response);
                         refetchapiTokendetail();
                     }
                     else {
@@ -1372,11 +1375,12 @@
                     if ($('#txt_source_type').val() == "Excel" || $("#txt_source_type").val() == "CSV") {
                         jAlert("Connector Details Updated Successfully..!", "Connector", function (e) {
                             if (e == true) {
-                                window.location.href = '@Url.Action("Connectorslist", "Connectors")';// "/Connectors/Connectorslist";
+                                window.location.href = '@Url.Action("Connectorslist", "Connectors")';
                             }
                         });
-                    }
-                    else {
+                    } else if($("#txt_source_type").val() == "API"){
+                        refetchapiTokendetail();
+                    } else {
                         refetch(response);
                     }
                 },
@@ -1809,36 +1813,7 @@
 <script>
      let authUrlParseTimeout;
     document.addEventListener("DOMContentLoaded", function () {
-      addAuthHeaderRow();
-    /*  const radioButtons = document.querySelectorAll('input[name="radioFilter"]');
-                const formNoneDiv = document.getElementById("filternone");
-                const formDataDiv = document.getElementById("filter-formdata");
-                const rawDiv = document.getElementById("filter-raw");
-                const rawOptionsDiv = document.getElementById("rawoptions");
-
-               const rawRadio = document.getElementById('filter-raw');
-                   rawRadio.checked = true;
-                   formDataDiv.style.display = "none";
-                   rawDiv.style.display = "block";
-                   rawOptionsDiv.style.display = "block";
-
-                radioButtons.forEach(radio => {
-                    radio.addEventListener("change", function () {
-                        if (this.value === "formdata") {
-                            formDataDiv.style.display = "block";
-                            rawDiv.style.display = "none";
-                            rawOptionsDiv.style.display = "none";
-                        } else if (this.value === "raw") {
-                            formDataDiv.style.display = "none";
-                            rawDiv.style.display = "block";
-                            rawOptionsDiv.style.display = "block";
-                        } else if (this.value === "formnone") {
-                            formDataDiv.style.display = "none";
-                            rawDiv.style.display = "none";
-                            rawOptionsDiv.style.display = "none";
-                        }
-                    });
-                }); */
+      addAuthHeaderRow();   
       const authUrlInput = document.getElementById("txt_auth_url");
       const paramsTableBody = document.getElementById("auth_table-body");
 

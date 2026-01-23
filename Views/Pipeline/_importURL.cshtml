@@ -294,6 +294,11 @@
                     return;
                 }
                 $("#auth_response").val(JSON.stringify(response, null, 2));
+                 if($("#txt_token_key").val().trim()) {
+                     var token = getAuthToken() ? getAuthToken() : $("#auth_response").val().trim();
+                        $("#auth_token").val(token);
+                     }
+                 getAPIResponse("No");
             },
             error: function (xhr) {                  
                     var errObj;
@@ -310,7 +315,7 @@
     }
 
     function buildauthPayload(){
-         const authHeaders = {};
+        const authHeaders = {};
         const rows = document.querySelectorAll("#auth_headerTableBody tr");
         rows.forEach(row => {
             const key = row.querySelector(".headerKey")?.value.trim();
@@ -352,231 +357,13 @@
         }
     });
 
-//      function confirm() {
-//             const curlCommand = document.getElementById('shortText').value; // Get the content of the textarea
-//                 // if (curlCommand.trim() === "") {
-//                 //     alert("Textarea is empty. Please enter data.");
-//                 //     return;
-//                 // }
-//                     let urlObj = "";
-//                     let params = "";
-//                 const method = "GET";
-//             const urlMatch = curlCommand.match(/'(http[^']+)'/);
-//             const url = urlMatch ? urlMatch[1] : '';
-//             if(url) {
-//                 try{
-//                    urlObj = new URL(url);
-//                     params = new URLSearchParams(urlObj.search);
-//                     }catch (error) {
-//             console.error("Failed to construct URL: ", error);
-//         }
-//             } else{
-//                     console.error("URL not found in curlCommand");
-//             }
-            
 
-//             // header
-//                 const headerRegex = /--header\s+'([^:]+):\s*(.+?)'/g;
-//                 let matchHeader;
-//                 const headers = {};
-//                 // Extract headers
-//                         while ((matchHeader = headerRegex.exec(curlCommand)) !== null) {
-//                         const key = matchHeader[1].trim();
-//                         const value = matchHeader[2].trim();
-//                     headers[key] = value;
-//                 }
-           
-//             // data
-//                    const regex = /--data '({.*})'/;
-//                    const matchData = curlCommand.match(regex);
-//                    if (matchData) {
-//                         const dataPart = matchData[1];
-//                          const radioButton = document.getElementById('filter-raw');
-//                          radioButton.checked = true;
-//                          const rawDiv = document.getElementById('raw');
-//                          rawDiv.style.display = 'block';
-//                          const jsonOption = document.getElementById('rawoptions');
-//                          jsonOption.style.display = 'block';
-//                          $('#sel_data').val("Json");
-//                          $('#comment').val(dataPart);
-//                         } 
+    function getAuthToken(){
+        const authKeyName = $("#txt_token_key").val().trim();
+        const stringauthResponse = $("#auth_response").val().trim();
+        const authResponse = JSON.parse(stringauthResponse);
+        const value = authResponse[authKeyName];
+        return value;
+    }
 
-//             $('#sel').val(method);
-//             $('#url').val(urlObj.origin + urlObj.pathname);
-//             $('#url').val(urlObj.origin + urlObj.pathname);
-//             const tableBody = document.getElementById('table-body');
-//             tableBody.innerHTML = '';
-
-//             if (params.toString()) {
-//             // Loop through each key-value pair in the URLSearchParams
-//             for (const [key, value] of params.entries()) {
-//                 // Create a new row element
-//                 const newRow = document.createElement('tr');
-
-//                 // Create cells for key, value, and description
-//                 const keyCell = document.createElement('td');
-//                 const valueCell = document.createElement('td');
-//                 const descCell = document.createElement('td');
-
-//                 // Create input elements for each cell and set their values
-//                 const keyInput = document.createElement('input');
-//                 keyInput.type = 'text';
-//                 keyInput.className = 'form-control';
-//                 keyInput.value = key;
-
-//                 const valueInput = document.createElement('input');
-//                 valueInput.type = 'text';
-//                 valueInput.className = 'form-control';
-//                 valueInput.value = value;
-
-
-
-//                 const descInput = document.createElement('input');
-//                 descInput.type = 'text';
-//                 descInput.className = 'form-control';
-//                 descInput.value = '';
-
-//                 // Append the inputs to the respective cells
-//                 keyCell.appendChild(keyInput);
-//                 valueCell.appendChild(valueInput);
-//                 descCell.appendChild(descInput);
-
-//                 // Append the cells to the row
-//                 newRow.appendChild(keyCell);
-//                 newRow.appendChild(valueCell);
-//                 newRow.appendChild(descCell);
-
-//                 // Append the row to the table body
-//                 tableBody.appendChild(newRow);
-//                 }
-//             }
-//             else {
-//                 console.log("No query parameters found in the URL");
-//             }
-   
-//             const headerTableBody = document.getElementById("headerTableBody");
-
-//             Object.entries(headers).forEach(([key, value]) => {
-//             const row = document.createElement("tr");
-
-//             const keyCell = document.createElement("td");
-//             keyCell.textContent = key;
-
-//             const valueCell = document.createElement("td");
-//             valueCell.textContent = value;
-
-//             const descriptionCell = document.createElement("td");
-//             descriptionCell.textContent = "";  // You can modify this as needed
-
-//             row.appendChild(keyCell);
-//             row.appendChild(valueCell);
-//             row.appendChild(descriptionCell);
-
-//             headerTableBody.appendChild(row);
-//             if(key == 'Authorization' || key == 'authorization'){
-//                  if(value.startsWith("Bearer ")) {
-//                      $('#sel_auth').val("bearer");
-//                  } else {
-//                      $('#sel_auth').val("select");
-//                  }
-//                }
-//         });
-
-//         cancel();
-
-// }
-
-//     function cleardata(){
-//                 $('#sel').val("");
-//                 $('#url').val("");
-//                 $('#url').val("");
-//                 $('#sel_auth').val("");
-//                 $('#sel_data').val("");
-//                 $('#comment').val("");
-//                 const tableBody = document.getElementById('table-body');
-//     const headerTableBody = document.getElementById("headerTableBody");
-//     tableBody.innerHTML = '';
-//     headerTableBody.innerHTML = '';   
-//    }
-
-//        function saveauthurl(){
-//             var url = $('#txt_auth_url').val();
-//             $.ajax({
-//                 type: "GET",
-//                     url: '@Url.Action("getAPIResponse", "Pipeline")?url=' + encodeURIComponent(url),
-//                 dataType: "json",
-//                 contentType : 'application/json; charset=utf-8',
-//                 success: function (response) {
-//                     if (response.error) {                        
-//                         return;
-//                         } else if (response.token) {
-//                                 $('#txt_auth_token').val(response.token);
-//                                 saveauthapiheader();
-//                             }else {
-//                        // apiresponse_structure(response, "No");
-                        
-//                     }
-//                    },
-//                 error: function (er) {
-//                     jAlert(er.message, "Error");
-//                 }
-//             });
-//        }
-
-//        function saveauthapiheader(){
-//                  var pipelineCode = $("#txt_ppl_code").val();
-//                     var current_date = new Date;
-//                     var pplapigid = $('#txt_api_gid').val();
-//                     var data = {};
-//                         data.pipeline_code = pipelineCode;
-//                         data.api_url = $('#url').val();
-//                         data.json_response = $('#txt_apiResponse').val();
-//                         data.auth_url = $('#txt_auth_url').val();
-//                         data.auth_user_name = $('#txt_auth_user_name').val();
-//                         data.auth_user_pswd = $('#txt_auth_user_pswd').val();
-//                         data.auth_token = $('#txt_auth_token').val();
-//                         data.remarks = "";
-//                         data.delete_flag = "N";
-//                         if(pplapigid == "") {
-//                             data.api_gid = "0";
-//                             data.created_date = current_date;
-//                             data.created_by = _user_code;
-//                               $.ajax({
-//                               type: "Post",
-//                               url: '@Url.Action("Addnewpplapiheader", "Pipeline")',
-//                               data: JSON.stringify(data),
-//                               dataType: "json",
-//                               contentType: 'application/json; charset=utf-8',
-//                               success: function (response) {
-//                                   if (response == "Record Inserted Successfully") {
-//                                       fetchpplapiheader();
-//                                       jAlert("Validated Succesfully ..!", "Error");
-//                                   }
-//                               },
-//                               error: function (er) {
-//                                   jAlert(er, "Error");
-//                               }
-//                           });
-//                         } else {
-//                             data.api_gid = pplapigid;
-//                              data.updated_date = current_date;
-//                              data.updated_by = _user_code;
-//                             $.ajax({
-//                               type: "Post",
-//                               url: '@Url.Action("Updateexistingpplapiheader", "Pipeline")',
-//                               data: JSON.stringify(data),
-//                               dataType: "json",
-//                               contentType: 'application/json; charset=utf-8',
-//                               success: function (response) {
-//                                   if (response == "Record Updated Successfully") {
-//                                       fetchpplapiheader();
-//                                       jAlert("Validated Succesfully ..!", "Error");
-//                                   }
-//                               },
-//                               error: function (er) {
-//                                   jAlert(er, "Error");
-//                               }
-//                           });
-//                         }
-//        }
 </script>

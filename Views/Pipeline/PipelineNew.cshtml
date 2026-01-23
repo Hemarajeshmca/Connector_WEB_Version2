@@ -37,9 +37,7 @@
         padding: 6px 11px !important;
     }
 
-
-
-        .no-border {
+   .no-border {
         border: none !important;
         box-shadow: none !important;
         outline: none !important;
@@ -199,9 +197,9 @@
         border-radius: 34px;
     }
 
-        .slider.round:before {
-            border-radius: 50%;
-        }
+    .slider.round:before {
+       border-radius: 50%;
+     }
 
     #send {
         position: fixed;
@@ -1091,7 +1089,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-4" style="width: 33.33333333%;padding-left: 0%;">
                                                         <label class="form-label">Description </label>
-                                                        <textarea class="form-control" id="txtppl_desc" type="text" name="txtppl_desc" style="width: 405px;height: 220px;resize: none;"></textarea>
+                                                        <textarea class="form-control" id="txtppl_desc" type="text" name="txtppl_desc" style="width: 405px;height: 210px;resize: none;"></textarea>
                                                     </div>
                                                     <div class="col-sm-4">
                                                     </div>
@@ -1195,8 +1193,9 @@
                                                                     <li><a data-toggle="tab" href="#menu1">Authorization</a></li>
                                                                     <li><a data-toggle="tab" href="#menu2">Headers</a></li>
                                                                     <li><a data-toggle="tab" href="#menu3">Body</a></li>
-                                                                    <li><a data-toggle="tab" href="#menu4">Sample Json</a></li>
+                                                                    <li><a data-toggle="tab" href="#menu4">Json</a></li>
                                                                     @* <li><a data-toggle="tab" href="#menu5">Others</a></li> *@
+                                                                    <li><a data-toggle="tab" href="#menu6">Filters</a></li>
                                                                 </ul>
                                                                 <div class="tab-content">
                                                                     <div id="home" style="padding: 0px;" class="tab-pane fade in active">
@@ -1313,7 +1312,7 @@
                                                                     <div id="menu4" class="tab-pane fade">
                                                                         <div class="row" style="width:100%;">
                                                                               <div style="padding-left: 16px;">
-                                                                                <label>Sample Json</label>
+                                                                                 <label style= "visibility:hidden">Sample Json</label> 
                                                                                 <textarea style="width: 96%;position: absolute;left: 2%;top: 90%;height: 17vh;padding: 10px;" class="form-control" rows="10" id="txt_apiResponse"></textarea>
                                                                             </div>
                                                                         </div>
@@ -1323,6 +1322,38 @@
                                                                             <label style="white-space: nowrap;margin-top: 11%">Have Auth URL</label>
                                                                             <input style="margin-left: 10%;" id="txt_have_auth" type="checkbox" onclick="getTokenUrl()" />
                                                                         </div>                                                                       
+                                                                    </div>
+                                                                    <div id="menu6" class="tab-pane fade">
+                                                                        <div class="row" style="padding-left: 2.4%;padding-right: 6.5%;">
+                                                                            <div class="col-md-6">
+                                                                                <div>
+                                                                                    <h3 style="margin-top: 10px;margin-bottom:0px; text-align: center;font-size: 17px;color: green;font-weight: 700;">
+                                                                                        Inclusion
+                                                                                    </h3>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    @* <label style="display:none">Filter Condition</label> *@
+                                                                                    <textarea class="form-control" type="text" id="txt_api_filtercond" placeholder="Filter Condition" name="txt_api_filtercond" oninput="togglebutton('Filter')" onclick="document.getElementById('btn_filtersave').disabled = true;" style="width:89%;height:65px;color: black;resize: none;"></textarea>
+                                                                                </div>
+                                                                                <div class="row" style="margin-top: 2%;">
+                                                                                    <input type="button" id='btn_api_flcheckquery' class="save query_clr" onclick="ApiCheckQuer('inclusion')" value="Check Query" style="padding: 8px 5px;" />
+                                                                                    <input style="margin-left: 2%;padding: 8px 5px;" type="button" id='btn_api_filtersave' onclick="Apifiltercondsave()" class="save" value="Save" disabled />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div>
+                                                                                    <h3 style="margin-top: 10px;margin-bottom:0px;text-align: center;font-size: 17px;color: red;font-weight: 700;"> Exclusion</h3>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    @* <label>Rejection Condition</label> *@
+                                                                                    <textarea class="form-control" type="text" id="txt_api_rejectioncond" placeholder="Rejection Condition" name="txt_api_rejectioncond" oninput="togglebutton('Rejection')" onclick="document.getElementById('btn_rejectionsave').disabled = true;" style="width:100%;height:65px;color: black;resize: none;"></textarea>
+                                                                                </div>
+                                                                                <div class="row" style="margin-top: 2%;">
+                                                                                    <input type="button" id='btn_api_rjcheckquery' class="save query_clr" onclick="ApiCheckQuer('exclusion')" value="Check Query" style="padding: 8px 5px;" />
+                                                                                    <input style="margin-left: 2%;padding: 8px 5px;" type="button" id='btn_api_rejectionsave' onclick="Apifiltercondsave()" class="save" value="Save" disabled />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1334,7 +1365,8 @@
                                                         <div class="col-md-12" style="margin-left: -12px;">
                                                             <label class="form-label">Select File</label>
                                                             <span class="mandatory">*</span>
-                                                            <input type="file" id="fileInput" name="fileInput" value="test" accept=".xlsx" onchange="file_change(this)">
+                                                            @* <input type="file" id="fileInput" name="fileInput" value="test" accept=".xlsx" onchange="file_change(this)"> *@
+                                                            <input type="file" id="fileInput" name="fileInput" accept=".xlsx" onclick="this.value=null" onchange="file_change(this)">
                                                         </div>
                                                     </div>
 
@@ -1447,13 +1479,34 @@
                                                     </div>
 
                                                     <div id="div_api" hidden>
-                                                        <div class="row">                                                            
-                                                            <div class="col-md-2" style="top: -5px;">
-                                                              @*  <button type="button" style="margin-left: -4px;" onclick="jsonKeyValidate()" class="btn btn-sm btn-primary">
-                                                                   Validate
-                                                                </button> *@
+                                                        <div class="row" style="margin-top:1%;margin-bottom: 6.5%;">
+                                                                <div class="col-md-4">
+                                                                    <label>Run Type</label>
+                                                                    <span class="mandatory">*</span>
+                                                                <select class="form-control" onchange="api_schedulecron_cond()" id="api_run_type" name="api_run_type">
+                                                                        <option value="">--select--</option>
+                                                                        <option value="On Demand" selected>On Demand</option>
+                                                                        <option value="Scheduled Run">Scheduled Run</option>                                                                        
+                                                                    </select>
+                                                                </div>                                                               
+
+                                                                <div class="col-md-4" id="api_Scheduled_expression">
+                                                                    <label class="form-label">Scheduled Cron Expression</label>
+                                                                    <span id="txt_cronexpr_s" class="mandatory" style="display:none;">*</span>                                                                    
+                                                                    <input class="form-control" id="api_txt_cronexpr" type="text" placeholder="Ex: 24-hour format (HH:mm)" name="txt_cronexpr" disabled />
+                                                                </div>
+                                                            <div class="col-md-4" style="vertical-align: middle;display: flex;margin-top: 5%;">
+                                                                    <span class="disabled" id="apibtn_editscheduler" onclick="api_scheduler_pop()"> <a> Edit </a></span>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                      
+                                                        @* <div class="row">                                                            
+                                                            <div class="col-md-2" style="top: -5px;">
+                                                                <button type="button" style="margin-left: -4px;" onclick="jsonKeyValidate()" class="btn btn-sm btn-primary">
+                                                                   Validate
+                                                                </button> 
+                                                            </div>
+                                                        </div> *@
 
                                                         <div id="srcapidssearch" style="margin-top: -3%;"></div>
                                                     </div>
@@ -1473,59 +1526,73 @@
                                                     <label>Dataset Unmatched</label>
                                                 </div>
 
-                                                <div class="row" id="add_newds" style="margin-top:15px;margin-left: 5px !important;display: none;">
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">Dataset Name </label>
-                                                        <span class="mandatory">*</span>
-                                                        <input class="form-control" id="txtds_gid" type="text" name="dataset_gid" style="display:none" />
-                                                        <input class="form-control" id="txtds_code" type="text" name="dataset_code" style="display:none" />
-                                                        <input class="form-control" id="txtds_name" type="text" name="dataset" />
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Category</label>
-                                                        <span class="mandatory">*</span>
-                                                        <select class="form-control" id="txtds_category" name="ds_category">
-                                                            <option value="">-- Select --</option>
-                                                            <option value="BankStatement">Bank Statement</option>
-                                                            <option value="Ledger">Ledger</option>
-                                                            <option value="Dump">Dump</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <input style="float: left;margin-top: 14%;padding: 5px 9px;width: 90%;margin-left: 6px;font-weight: bold;" type="button" id='btn_saveds' onclick="dsSave()" name="save" class="btn btn-sm btn-primary btns" value="Save" />
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <input style="float: left;margin-top: 14%;padding: 6px 9px;width: 90%;margin-left: 0px;border-radius: 3px; display:none;" type="button" id='btn_cloneds1' onclick="cloneSave()" name="save" class="btn btn-sm action-button btns" value="Clone" />
-                                                    </div>
+                                                <div id="add_newds" style="margin-top:2px;margin-left: 20px !important;display: none;">
+                                                   <div class="row">
+                                                       <div class="col-md-7">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <label class="form-label">Dataset Name </label>
+                                                                    <span class="mandatory">*</span>
+                                                                    <input class="form-control" id="txtds_gid" type="text" name="dataset_gid" style="display:none" />
+                                                                    <input class="form-control" id="txtds_code" type="text" name="dataset_code" style="display:none" />
+                                                                    <input class="form-control" id="txtds_name" type="text" name="dataset" />
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label>Category</label>
+                                                                    <span class="mandatory">*</span>
+                                                                    <select class="form-control" id="txtds_category" name="ds_category">
+                                                                        <option value="">-- Select --</option>
+                                                                        <option value="BankStatement">Bank Statement</option>
+                                                                        <option value="Ledger">Ledger</option>
+                                                                        <option value="Dump">Dump</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input style="float: left;margin-top: 25%;padding: 5px 9px;width: 90%;margin-left: 6px;font-weight: bold;" type="button" id='btn_saveds' onclick="dsSave()" name="save" class="btn btn-sm btn-primary btns" value="Save" />
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input style="float: left;margin-top: 25%;padding: 6px 9px;width: 90%;margin-left: 0px;border-radius: 3px; display:none;" type="button" id='btn_cloneds1' onclick="cloneSave()" name="save" class="btn btn-sm action-button btns" value="Clone" />
+                                                                </div>
+                                                           </div>
+                                                       </div>
+                                                        <div class="col-md-5" style="position: absolute;top: 9%;left: 59%;z-index: 10;">
+                                                            <div id="sourcefield_grid_unmatched" style="width: 94%;height: 338px;"></div>
+                                                       </div>
+                                                   </div>                                                   
                                                 </div>
 
-                                                <div class="row" id="add_existingds" style="margin-top: 5px;margin-left: 23px !important;">
+                                                <div class="row" id="add_existingds" style="margin-top: -4px;margin-left: 7px !important;">
                                                     <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <label style="margin-top: 6px;">Target DataSet</label>
-                                                            <span style="margin-top: 6px;" class="mandatory">*</span> &nbsp;&nbsp;
-                                                            <input hidden id="trgdataset" />
-                                                            <input id="existingdataset" />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label style="margin-top: 6px;">Category</label>
-                                                            <span style="margin-top: 6px;" class="mandatory">*</span> &nbsp;&nbsp;
-                                                            <select class="form-control" id="txtds_category1" name="ds_category" disabled>
-                                                                <option value="">-- Select --</option>
-                                                                <option value="BankStatement">Bank Statement</option>
-                                                                <option value="Ledger">Ledger</option>
-                                                                <option value="Dump">Dump</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <input style="float: left;margin-top: 17%;padding: 5px 9px;width: 80%;margin-left: 6px;font-weight: bold;" type="button" id='btn_saveds' onclick="SaveExistingDS()" name="save" class="btn btn-sm btn-primary btns" value="Save" />
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <input style="float: left;margin-top: 17%;padding: 6px 9px;width: 90%;margin-left: -20px;border-radius: 3px;" type="button" id='btn_cloneds' onclick="cloneSave()" name="save" class="btn btn-sm action-button btns" value="Clone" />
-                                                        </div>
+                                                       <div class="col-md-7">
+                                                            <div class="col-sm-4">
+                                                                <label style="margin-top: 6px;">Target DataSet</label>
+                                                                <span style="margin-top: 6px;" class="mandatory">*</span> &nbsp;&nbsp;
+                                                                <input hidden id="trgdataset" />
+                                                                <input id="existingdataset" />
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label style="margin-top: 6px;">Category</label>
+                                                                <span style="margin-top: 6px;" class="mandatory">*</span> &nbsp;&nbsp;
+                                                                <select class="form-control" id="txtds_category1" name="ds_category" disabled>
+                                                                    <option value="">-- Select --</option>
+                                                                    <option value="BankStatement">Bank Statement</option>
+                                                                    <option value="Ledger">Ledger</option>
+                                                                    <option value="Dump">Dump</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input style="float: left;margin-top: 33%;padding: 5px 9px;width: 80%;margin-left: 6px;font-weight: bold;" type="button" id='btn_saveds' onclick="SaveExistingDS()" name="save" class="btn btn-sm btn-primary btns" value="Save" />
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input style="float: left;margin-top: 33%;padding: 6px 9px;width: 90%;margin-left: -20px;border-radius: 3px;" type="button" id='btn_cloneds' onclick="cloneSave()" name="save" class="btn btn-sm action-button btns" value="Clone" />
+                                                            </div>
+                                                       </div>
+                                                        <div class="col-md-5" style="position: absolute;top: 9%;left: 59%;z-index: 10;">
+                                                            <div id="sourcefield_grid"></div>
+                                                       </div>
                                                     </div>
                                                 </div>
-                                                <div style="display:none" id="ds_grid"> </div>
+                                                <div style="display:none; position: absolute;top: 43%;" id="ds_grid"> </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1535,7 +1602,7 @@
                                 </fieldset>
                                 <fieldset id="tab3">
                                     <div class="form-card" style="height:64vh;padding-left: 29px;">
-                                        <div style="margin-top: -8px;"> <label id="lbl_info" style="color:brown"> </label> </div>
+                                        <div style="margin-top: -12px;"> <label id="lbl_info" style="color:brown"> </label> </div>
                                         <ul id="cc_progressbar" style="padding: 8px;padding-left: 0px;text-align: center;">
                                             <li class="active cc_tab-color" id="apiDSSelectionTab"><a data-toggle="tab" style="color: #fff;">Field Selection</a></li>
                                             <li class="cc_tab-color" id="fieldmappingTab"><a data-toggle="tab" style="color: #fff;">Field Mapping</a></li>
@@ -1600,20 +1667,19 @@
 
 
                                             <div id="show_ds" style="margin-top: -5%;">
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                    </div>
-                                                    <div class="col-sm-4" id="btn_save" style="margin-left:69%; display: flex;top: 14px;">
-                                                        <input style="padding: 1rem !important;cursor:pointer;" type="button" onclick="fieldmapsave()" id='btn_fieldmapsave_new' class="save" value="Save" />
-                                                        <input style="padding: 1rem !important;cursor:pointer;margin-left: 12px; color: red;background-color: white;border: 1px solid red;" type="button" onclick="revert()" id='btn_fieldmapRevert' class="save" value="Revert" />
-                                                        <div style="display: inline-flex; align-items: center; position: relative; margin-left: 12px;">
-                                                            <input type="button" id="btn_addnew" class="save" value="Expression" style="padding: 1rem 2.5rem 1rem 2.5rem !important; cursor: pointer; position: relative; z-index: 1;" />
-                                                            <span class="button-icon" style="position: absolute; left: 0.5rem; z-index: 2;"> <i class="glyphicon glyphicon-plus" style="color: #175650 !important;"></i>  </span>
+                                                                                            
+                                                    <div id="btn_save" style="display: flex;justify-content: flex-end;padding-right: 20px;">
+                                                        <input style="padding: 1rem !important;cursor:pointer; height: 39px;margin-top: 20px;" type="button" onclick="fieldmapsave()" id='btn_fieldmapsave_new' class="save" value="Save" />
+                                                        <input style="padding: 1rem !important;cursor:pointer;margin-left: 12px; color: red;background-color: white;border: 1px solid red;height: 39px;margin-top: 20px;" type="button" onclick="revert()" id='btn_fieldmapRevert' class="save" value="Revert" />
+                                                        <div style="display: inline-flex; align-items: center; position: relative; margin-left: 12px;margin-right: 12px;">
+                                                            <input type="button" id="btn_addnew" class="save" value="Expression" style="padding: 1rem 2.5rem 1rem 2.5rem !important; cursor: pointer; position: relative; z-index: 1;margin-top: 19px;" />
+                                                            <span class="button-icon" style="position: absolute; left: 0.5rem; z-index: 2;"> <i class="glyphicon glyphicon-plus" style="color: #175650 !important;margin-top: 20px;"></i>  </span>
                                                         </div>
+                                                        <button class="save query_clr" style="margin-top: 19px;width: 150px;background-color: #1a5e19 !important;" id="btn_fin_chkquery" onclick="parentChildRelation()" type="button" name="btn_fin_chkquery">
+                                                            Parent Child Relation
+                                                        </button>
                                                     </div>
-                                                </div>
+                                                
 
                                                 <div class="row" id="dataset_fieldMapping"> </div>
                                                 <div>
@@ -1727,10 +1793,11 @@
                                                     <span class="mandatory">*</span>
                                                     <select class="form-control" id="upload_mode" onchange="rejectduplicate_cond()" name="upload_mode">
                                                         <option>--select--</option>
-                                                        <option selected>Insert or Update based on key</option>
-                                                        <option>Insert or Update based on key with log</option>
                                                         <option>Append</option>
-                                                        <option>Clean and Insert</option>
+                                                        <option>Truncate and Insert</option>
+                                                         <option>Delete and Insert</option>
+                                                         <option>Insert or Update based on key with log</option>
+                                                        <option selected>Insert or Update based on key</option>                                                                                                               
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -1757,6 +1824,7 @@
 
                                                     <div class="row" style="margin: -1px;">
                                                         <button class="save query_clr" style="margin-top: 5%;" id="btn_fin_chkquery" onclick="IsCheckQuery('ExtractCondition')" type="button" name="btn_fin_chkquery">  Check Query </button>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -1868,6 +1936,7 @@
     <div> @await Html.PartialAsync("_apiColumns", Model) </div>
     <div> @await Html.PartialAsync("_importURL", Model)</div>
     <div> @await Html.PartialAsync("_datasetClone", Model)</div>
+    <div> @await Html.PartialAsync("_parentChildRelation", Model)</div>
 
     <div class="modal" id="field_mappingPopup">
         <div class="modal-dialog modal-xl">
@@ -2063,6 +2132,7 @@
     var gridhasChange = false;
     var tabRedirection = false;
     var hasActiveDataset = false;
+    var urlResponse = "";
     $(document).ready(function () {
         sessionStorage.removeItem('DS');
         ppl_mode = sessionStorage.getItem("ppl_mode");
@@ -2082,7 +2152,7 @@
         toggleDivs('new');
         //loadgrid([]);
         loadapigrid([]);
-        loaddatasetgrid([]);
+       // loaddatasetgrid([]);
         var apiResponse = null;
         SrcCsvGrid([]);
         SrcApiGrid([]);
@@ -2217,7 +2287,7 @@
                 return;
                 // Stay on same screen
             }
-            else if (current_fs.context.value == "Submit" && v_upldmode == "Clean and Insert" &&
+            else if (current_fs.context.value == "Submit" && (v_upldmode == "Clean and Insert" || v_upldmode == "Truncate and Insert") &&
                 (checkbox.checked == false && v_duplicate_mode != "Abort on Duplicates") &&
                 $("#keyfield_drp").val() != undefined) {
                 jAlert("Please Check the Reject Duplicates (or) remove the keyfield..!", "Connector");
@@ -2229,18 +2299,27 @@
                 return;
             }
              else if (current_fs.context.value == "Next" && current_fs.context.id == 'btn_nextppl1' && selectedDataset == "") {
-                document.getElementById('pipelne').classList.remove('active');
-                document.getElementById('datasource').classList.add('active');
-                document.getElementById('preprocess').classList.remove('active');
-                document.getElementById('processing').classList.remove('active');
-                document.getElementById('postprocessing').classList.remove('active');
-                $("#tab1").hide();
-                $("#tab2").show();
-                $("#tab3").hide();
-                $("#tab4").hide();
-                $("#tab5").hide();
-                //loadexistingdataset("");
-
+               var activeTabId = $('#cc_progressbar li.active').attr('id');
+                if($("#txt_source_db_type").val() == "API" && activeTabId === 'templateSelection')  {
+                    if($("#api_run_type").val() == ""){
+                        jAlert("Please Select run type..!", "Connector");                        
+                        return;
+                    } else if($("#api_run_type").val() == "Scheduled Run" && ($("#api_txt_cronexpr").val() == "")){
+                        jAlert("Please enter cron expression..!", "Connector");                       
+                        return;
+                    }                    
+                } else {
+                    document.getElementById('pipelne').classList.remove('active');
+                    document.getElementById('datasource').classList.add('active');
+                    document.getElementById('preprocess').classList.remove('active');
+                    document.getElementById('processing').classList.remove('active');
+                    document.getElementById('postprocessing').classList.remove('active');
+                    $("#tab1").hide();
+                    $("#tab2").show();
+                    $("#tab3").hide();
+                    $("#tab4").hide();
+                    $("#tab5").hide();
+                }
              } else if (current_fs.context.value == "Next" && current_fs.context.id == 'btn_nextppl2' && gridhasChange == true) {
                  document.getElementById('pipelne').classList.remove('active');
                 document.getElementById('datasource').classList.remove('active');
@@ -2290,7 +2369,24 @@
                 $("#tab3").show();
                 $("#tab4").hide();
                 $("#tab5").hide();
-             }  else {
+             } 
+             // else if(current_fs.context.value == "Next" && current_fs.context.id == 'btn_nextppl1' && gridhasChange == false && $("#txt_source_db_type").val() == "API"){
+             //    var activeTabId = $('#cc_progressbar li.active').attr('id');
+             //        if(activeTabId === 'templateSelection')  {
+             //            document.getElementById('pipelne').classList.remove('active');
+             //            document.getElementById('datasource').classList.remove('active');
+             //            document.getElementById('preprocess').classList.add('active');
+             //            document.getElementById('processing').classList.remove('active');
+             //            document.getElementById('postprocessing').classList.remove('active');
+             //            $("#tab1").hide();
+             //            $("#tab2").hide();
+             //            $("#tab3").show();
+             //            $("#tab4").hide();
+             //            $("#tab5").hide();
+             //        } else {
+             //        }
+             // }
+             else {
                 current_fs.hide();
                 next_fs.show();
                 current_fs.animate({ opacity: 0 }, {
@@ -2330,18 +2426,44 @@
                 $("#tab4").hide();
                 $("#tab5").hide();
         } else if(current_fs.context.value == "Previous" && current_fs[0].id == 'tab3' && gridhasChange == false) {
-            document.getElementById('pipelne').classList.remove('active');
-            document.getElementById('datasource').classList.add('active');
-            document.getElementById('preprocess').classList.remove('active');
-            document.getElementById('processing').classList.remove('active');
-            document.getElementById('postprocessing').classList.remove('active');
-            $("#tab1").hide();
-            $("#tab2").show();
-            $("#tab2").addClass("show-tab-important");
-            $("#tab3").hide();
-            $("#tab3").removeClass("show-tab-important");
-            $("#tab4").hide();
-            $("#tab5").hide();
+            if($('#cc_progressbar li.active').attr('id') == 'fieldmappingTab'
+                    && $("#txt_source_db_type").val() == "API"){
+                    document.getElementById('pipelne').classList.remove('active');
+                    document.getElementById('datasource').classList.remove('active');
+                    document.getElementById('preprocess').classList.add('active');
+                    document.getElementById('processing').classList.remove('active');
+                    document.getElementById('postprocessing').classList.remove('active');
+                    $("#tab1").hide();
+                    $("#tab2").hide();
+                    $("#tab3").show();
+                    $("#tab3").addClass("show-tab-important");
+                    $("#tab4").hide();
+                    $("#tab5").hide();
+                    expressionConf.style.display = "none";
+                  fieldmappingConf.style.display = "none";
+                  filtersConf.style.display = "none";
+                  apiDSSelectionConf.style.display = "block";
+                  datafieldselection.style.display = "block";
+
+                  fieldmappingTab.classList.remove("active");
+                  filtersTab.classList.remove("active");
+                  apiDSSelectionTab.classList.add("active");
+
+            } else {
+                    document.getElementById('pipelne').classList.remove('active');
+                    document.getElementById('datasource').classList.add('active');
+                    document.getElementById('preprocess').classList.remove('active');
+                    document.getElementById('processing').classList.remove('active');
+                    document.getElementById('postprocessing').classList.remove('active');
+                    $("#tab1").hide();
+                    $("#tab2").show();
+                    $("#tab2").addClass("show-tab-important");
+                    $("#tab3").hide();
+                    $("#tab3").removeClass("show-tab-important");
+                    $("#tab4").hide();
+                    $("#tab5").hide();
+            }
+
         }else if(current_fs.context.value == "Previous" && current_fs[0].id == 'tab2' && $('#cc_progressbar li.active').attr('id') == 'datasetSelection') {
 
                 $('#cc_progressbar li').removeClass('active');
@@ -2368,7 +2490,7 @@
             $("#tab3").hide();
             $("#tab4").hide();
             $("#tab5").hide();
-        }
+        } 
         else
         {
             current_fs.hide();
@@ -2586,13 +2708,14 @@
                    contentType: 'application/json; charset=utf-8',
                    success: function (response) {
                        hasActiveDataset = response.haveActiveDataset;
+                       fetchpplapiheader();
                        $('#txt_ppl_gid').val(response.pipeline_gid);
                        $('#txt_ppl_code').val(response.pipeline_code);
                        $('#txt_ppl_status').val(response.pipeline_status);
                        $('#txtppl_code').val(response.pipeline_code);
                        $('#txtppl_status').val(response.pipeline_status);
                        $('#txtpipelinecode').val(response.pipeline_code);
-                       $('#txt_fileextension').val(response.source_file_name);
+                       $('#txt_fileextension').val(response.source_file_name);                      
                        ds_name1 = response.result_name;
                        $('#txtppl_name').val(response.pipeline_name);
                        $('#txtppl_desc').val(response.pipeline_desc);
@@ -2608,7 +2731,7 @@
                            var e = document.getElementById("connectors");
                            var value = e.value;
                            var text = e.options[e.selectedIndex].text;
-
+                           
                            if (text == "-- Select --") {
                                // $("#div_fileinput").hide();
                                // $("#grid_tvc").hide();
@@ -2626,7 +2749,6 @@
                                    contentType: 'application/json; charset=utf-8',
                                    success: function (data) {
                                        var select = $("#databasename");
-
                                        select.empty();
                                        select.append($("<option>").attr("value", "").text("-- Select --"));
                                        $.each(data, function (index, item) {
@@ -2669,8 +2791,22 @@
                                        extractcond_label();
                                        loadgriddataprocessing([]);
                                        if($("#txt_source_db_type").val() == "API") {
+                                           $('#api_run_type').val(response.run_type);
+                                           $('#run_type').val(response.run_type);
+                                           document.getElementById('run_type').style.disabled = true;
+                                           $('#api_txt_cronexpr').val(response.cron_expression);
+                                           $('#txt_cronexpr').val(response.cron_expression);
+                                           document.getElementById('txt_cronexpr').style.disabled = true; 
+                                           document.getElementById('Scheduled_expression').style.disabled = true;
+                                           api_schedulecron_cond();    
                                            if ($('#url').val()){
-                                            getAPIResponse("No");
+                                               if($("#txt_have_auth").val() == "Y"){
+                                                    var conn_code = $('#connectors').val();
+                                                    $("#sel_auth").val("bearer");
+                                                    refetchapiTokendetail(conn_code);
+                                                } else {
+                                                    getAPIResponse("No");
+                                                }
                                            }
                                             else if($('#txt_apiResponse').val()){
                                                 apiresponse_structure(JSON.parse($('#txt_apiResponse').val()),"No")
@@ -3366,6 +3502,15 @@
            if ($("#txtppl_name").val() == "" || $("#txtppl_name").val() == null || $("#txtppl_name").val() == undefined) {
                jAlert("Please enter pipeline name.", "Connector");
                return;
+           } 
+           if ($("#txt_source_db_type").val() == "API") {
+               if($("#api_run_type").val() == ""){
+                   jAlert("Please select Run Type.", "Connector");
+                   return;
+               } else if($("#api_run_type").val() == "Scheduled Run" && ($("#api_txt_cronexpr").val() == "")){
+                   jAlert("Please enter Cron Expression.", "Connector");
+                   return;
+               }
            }
            var current_date = new Date;
            var conn_code = document.getElementById("connectors");
@@ -3373,21 +3518,20 @@
 
            var db_name = document.getElementById("databasename");
            var v_db_name = db_name.value;
-
            var selectedfile = document.getElementById("selectedfilename").textContent;
            var sheet_name1 = document.getElementById("txt_sheetname").value;
            var srctblviewqry_type = document.getElementById("src_tblviewquery");
            v_srctblviewqry_type = srctblviewqry_type.value;
-            var trg_tbl = $('#txtds_code').val();
+           var trg_tbl = $('#txtds_code').val();
            var ppl_code = $("#txt_ppl_code").val();
            var v_trg_table = trg_tbl.toString().split('-')[0];
            var label = document.getElementById('lbl_info');
            var label1 = document.getElementById('lbl_info1');
            var label2 = document.getElementById('lbl_info2');
            var label3 = document.getElementById('lbl_info_ds');
+           var conn_code = document.getElementById("connectors");
            var selectedOption = conn_code.options[conn_code.selectedIndex];
-           var selectedText = selectedOption.textContent;
-           var getDSName = JSON.parse(sessionStorage.getItem("DS"));
+           var selectedText = selectedOption.textContent;          
            label.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
            label1.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
            label2.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
@@ -3427,6 +3571,8 @@
                insppl.created_by = _user_code;
                insppl.pipeline_status = "Draft";
                insppl.result_name = ds_name1;
+               insppl.run_type = $("#api_run_type").val();
+               insppl.cron_expression = $("#api_txt_cronexpr").val();
                var insppl1 = insppl;
                $.ajax({
                    type: "Post",
@@ -3462,8 +3608,9 @@
                updppl.updated_by = _user_code;
                updppl.pipeline_status = "Active";
                updppl.result_name = ds_name1;
-               var updppl1 = updppl;
-               var stngyfy = JSON.stringify(updppl1)
+               updppl.run_type = $("#api_run_type").val();
+               updppl.cron_expression = $("#api_txt_cronexpr").val();
+               var updppl1 = updppl;               
                $.ajax({
                    type: "Post",
                    url: '@Url.Action("Updateexistingpipeline", "Pipeline")',
@@ -4074,7 +4221,8 @@
                // Stay on same screen
            }
            // Hema
-           else if (v_runtype == "Scheduled Run" && v_file_path == "") {
+            
+           else if (v_runtype == "Scheduled Run" && v_file_path == "" && $("#txt_source_db_type").val() != "API") {
                jAlert("File Path Cannot be blank.", "Connector");
                return;
                // Stay on same screen
@@ -4156,7 +4304,7 @@
                return;
            }
 
-           if (v_upldmode == "Clean and Insert" &&
+           if ((v_upldmode == "Clean and Insert" || v_upldmode == "Truncate and Insert") &&
                (checkbox.checked == false && v_duplicate_mode != "Abort on Duplicates") &&
                $("#keyfield_drp").val() != undefined) {
                jAlert("Please Check the Reject Duplicates (or) remove the keyfield..!", "Connector");
@@ -4164,14 +4312,9 @@
                // Stay on same screen
            }
 
-           // if (v_upldmode!= "Pull all X days" v_extract_cond == "") {
-           //     jAlert("Extraction Condition cannot be empty..!", "Connector");
-           //     return;
-           // }
-
            data.pipeline_code = $("#txt_ppl_code").val();
            data.run_type = v_runtype;
-           data.cron_expression = v_cron_expression;//$("#txt_cronexpr").val();
+           data.cron_expression = v_cron_expression;
            data.scheduler_file_path = v_file_path;
            data.extract_mode = v_ext_mode;
            data.upload_mode = v_upldmode;
@@ -4216,8 +4359,7 @@
                                    dataSelection.classList.add("active");
                                    templateSelectionConf.style.display = "none";
                                    dataSelectionConf.style.display = "block";
-                                   loadexistingdataset("");
-                                   //window.location.href = '@Url.Action("PipelineList", "Pipeline")';
+                                   loadexistingdataset("");                                  
                                }
                            });
                        },
@@ -4282,11 +4424,18 @@
                contentType: 'application/json; charset=utf-8',
                success: function (response) {
                    if (response.length > 0) {
-                       $('#txt_pplfinalization_gid').val(response[0].finalization_gid);
-                       $('#run_type').val((response[0].run_type).toString());
-                       schedulecron_cond();
-
-                       $('#txt_cronexpr').val(response[0].cron_expression);
+                       if($("#txt_source_db_type").val() == "API") {
+                           document.getElementById("run_type").disabled = true;
+                           document.getElementById("txt_cronexpr").disabled = true; 
+                           document.getElementById("Scheduled_expression").disabled = true;
+                           $("#run_type").val($("#api_run_type").val());
+                           $("#txt_cronexpr").val($("#api_txt_cronexpr").val());
+                       } else {
+                        $('#run_type').val((response[0].run_type).toString());
+                        $('#txt_cronexpr').val(response[0].cron_expression);
+                        schedulecron_cond();
+                       }
+                       $('#txt_pplfinalization_gid').val(response[0].finalization_gid);                     
                        $('#extract_mode').val((response[0].extract_mode).toString());
                        extracttext_cond();
                        $('#upload_mode').val((response[0].upload_mode).toString());
@@ -4324,9 +4473,19 @@
                        }
                        selectColumns(response[0].key_field);
                    } else {
-                          $('#txt_pplfinalization_gid').val("");
-                          $('#run_type').val("On Demand");
-                          schedulecron_cond();
+                          if($("#txt_source_db_type").val() == "API") {
+                               document.getElementById("run_type").disabled = true;
+                               document.getElementById("txt_cronexpr").disabled = true; 
+                               document.getElementById("Scheduled_expression").disabled = true;
+                               document.getElementById("parentdataset").disabled = true;
+                               $("#run_type").val($("#api_run_type").val());
+                               $("#txt_cronexpr").val($("#api_txt_cronexpr").val());
+                           } else {
+                                // $('#txt_pplfinalization_gid').val("");
+                                $('#run_type').val("On Demand");
+                                schedulecron_cond();
+                           }  
+                           $('#txt_pplfinalization_gid').val("");
                           document.getElementById("chkbox_rejduplicate").checked = true;
                           extracttext_cond();
                           $('#upload_mode').val("Insert or Update based on key");
@@ -4607,7 +4766,6 @@
                 value.value = "";
                 return;
             }
-            console.log("File", files);
             var slctfilename = $("#selectedmacrofilename").val();
             if (slctfilename == "") {
                 $("#fileInput_macro").removeClass('no-file-chosen');
@@ -4640,7 +4798,20 @@
             });
     }
 
+    let lastExcelModifiedTime = 0;
+
     function file_change(value) {
+        const file1 = value.files[0];
+        if (!file1) return;
+
+        // Detect actual file modification
+        if (lastExcelModifiedTime === file1.lastModified) {
+            jAlert("File not changed. Please modify the Excel and try again.","Connector");
+            return;
+        }
+
+        // Update modified time
+        lastExcelModifiedTime = file1.lastModified;
         // Hema on change got a information about change point 2. done on October 15-10-2025
         // if($('#txt_fileextension').val()) {
         if(hasActiveDataset == true){
@@ -5297,6 +5468,7 @@
           fieldmappingTab.classList.add("active");
           filtersTab.classList.remove("active");
           apiDSSelectionTab.classList.remove("active");
+          getdatasetfield();
       });
 
       filtersTab.addEventListener("click", () => {
@@ -5309,6 +5481,7 @@
           fieldmappingTab.classList.remove("active");
           filtersTab.classList.add("active");
           apiDSSelectionTab.classList.remove("active");
+          fetchpplcond('Filter');
       });
 
       validationTab.addEventListener("click", () => {
@@ -5678,6 +5851,21 @@
           }
       }
 
+      function api_scheduler_pop(){
+           if ($('#api_run_type').val() == 'Scheduled Run') {
+              $('#scheduler_exp_Popup').show();
+              var cronExpression = $('#txt_cronexpr').val();
+              var cronParts = cronExpression.split(' ');
+              $('#txt_second').val(cronParts[0]);
+              $('#txt_minute').val(cronParts[1]);
+              $('#txt_hour').val(cronParts[2]);
+              $('#txt_dayhour').val(cronParts[3]);
+              $('#txt_month').val(cronParts[4]);
+              $("#txt_cronexpression").val(cronExpression);
+              document.getElementById('div_scheduler_path').style.visibility = "hidden";
+           }
+      }
+
       function pulllastxdays_cond() {
           if ($('#extract_mode').val() == 'Pull last X days' || $('#extract_mode').val() == 'Incremental records') {
               $('#txt_extractcond').val("");
@@ -5727,7 +5915,7 @@
 
       }
       function rejectduplicate_cond1() {
-          if ($('#upload_mode').val() == 'Clean and Insert') {
+    if ($('#upload_mode').val() == 'Clean and Insert' || $('#upload_mode').val() == "Truncate and Insert") {
               document.getElementById("chkbox_rejduplicate").checked = false;
               document.getElementById("chkbox_rejduplicate").disabled = true;
           }
@@ -5771,7 +5959,7 @@
                   }
                   else if (type == "fieldmappingInsert") {
                     //  PPLfieldMapInsert();
-                  }
+                  }                  
               },
               error: function (er) {
                   jAlert(er, "Error");
@@ -6267,8 +6455,8 @@
           window.location.href = downloadUrl;
       }
 
-        function DownloadMacroTemplate(){
-            var pipelineCode = $("#txt_ppl_code").val();
+      function DownloadMacroTemplate(){
+          var pipelineCode = $("#txt_ppl_code").val();
           if (!pipelineCode) {
               jAlert("Pipeline code is required.", "Error");
               return;
@@ -6328,102 +6516,102 @@
           });
       }
 
-    function loaddatasetgrid(datasetfield) {
-       $("#grid_datasetfield").remove();
-       $('#dsgrid').append('<div id="grid_datasetfield" style="width: 96%; height: 230px !important; margin-top: 10px;margin-left: 15px;"></div>');
-       $("#grid_datasetfield").kendoGrid({
-      dataSource: {
-      data: datasetfield,
-      pageSize: 100,
-      schema: {
-      model: {
-          fields: {
-              dataset_gid: { type: "string", defaultValue: 0},
-              dataset_name: {type: "string"},
-              dataset_field: { type: "string" },
-              field_type: { type: "string", defaultValue: "TEXT"},
-              field_length: { type: "string", defaultValue: "255"},
-              mandatory: { type: "string"},
-              seq_no: {type: "string"},
-              target_dataset_field: {type: "string"},
-              source_dataset_field: {type: "string"}
+      function loaddatasetgrid(datasetfield) {
+           $("#grid_datasetfield").remove();
+           $('#dsgrid').append('<div id="grid_datasetfield" style="width: 90%; height: 230px !important; margin-top: 10px;margin-left: 15px;"></div>');
+           $("#grid_datasetfield").kendoGrid({
+          dataSource: {
+          data: datasetfield,
+          pageSize: 100,
+          schema: {
+          model: {
+              fields: {
+                  dataset_gid: { type: "string", defaultValue: 0},
+                  dataset_name: {type: "string"},
+                  dataset_field: { type: "string" },
+                  field_type: { type: "string", defaultValue: "TEXT"},
+                  field_length: { type: "string", defaultValue: "255"},
+                  mandatory: { type: "string"},
+                  seq_no: {type: "string"},
+                  target_dataset_field: {type: "string"},
+                  source_dataset_field: {type: "string"}
+                  }
               }
-          }
-        }
-      },
-      height: 200,
-      edit: OnEdit,
-      dataBound: function (e) {
-              resultData = e.sender._data;
-              var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
+            }
           },
-      height: 200,
-      width: 1058,
-      editable: '',
-      pageable: false,
-      sortable: true,
-      filterable: true,
-      selectable: "row",
-      toolbar: "<a href='javascript:void(0)' onclick='add()' > <span class='glyphicon glyphicon-plus' style = 'color:white' > </span></a> ",
-      columns: [
-      {
-          field: "dataset_gid",
-          title: "dataset_gid",
-          hidden: true,
-      },
+          height: 200,
+          edit: OnEdit,
+          dataBound: function (e) {
+                  resultData = e.sender._data;
+                  var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
+              },
+          height: 200,
+          width: 1058,
+          editable: '',
+          pageable: false,
+          sortable: true,
+          filterable: true,
+          selectable: "row",
+          toolbar: "<a href='javascript:void(0)' onclick='add()' > <span class='glyphicon glyphicon-plus' style = 'color:white' > </span></a> ",
+          columns: [
+          {
+              field: "dataset_gid",
+              title: "dataset_gid",
+              hidden: true,
+          },
+               {
+                  field: "Action",
+                  title: "Action",
+                  template: "<div class= 'action-cell' style = 'text-align: center;' > </t> <i class='glyphicon glyphicon-trash' style='color:red;margin-left: 20% !important'></i></div>",
+                  sortable: false,
+                  filterable: false,
+                  width: 50
+              },
+          {
+              field: "dataset_name",
+              title: "Dataset Name",
+              editor: datanameEditor,
+              width: 100,
+          },
+          {
+              field: "dataset_field",
+              title: "Dataset Field",
+              width: 100,
+          },{
+              field : "seq_no",
+              title: "seq_no",
+              width:10,
+              hidden: true
+          },
+          {
+              field: "field_type",
+              title: "Field Type",
+              editor: fieldTypeEditor,
+              width:100,
+          },
+          {
+              field: "field_length",
+              title: "Field Length",
+              width:50
+          },
            {
-              field: "Action",
-              title: "Action",
-              template: "<div class= 'action-cell' style = 'text-align: center;' > </t> <i class='glyphicon glyphicon-trash' style='color:red;margin-left: 20% !important'></i></div>",
-              sortable: false,
-              filterable: false,
-              width: 50
-          },
-      {
-          field: "dataset_name",
-          title: "Dataset Name",
-          editor: datanameEditor,
-          width: 100,
-      },
-      {
-          field: "dataset_field",
-          title: "Dataset Field",
-          width: 100,
-      },{
-          field : "seq_no",
-          title: "seq_no",
-          width:10,
-          hidden: true
-      },
-      {
-          field: "field_type",
-          title: "Field Type",
-          editor: fieldTypeEditor,
-          width:100,
-      },
-      {
-          field: "field_length",
-          title: "Field Length",
-          width:50
-      },
-       {
-           field: "field_typeval",
-           title: "Field Typeval",
-           hidden: true
-       },
-      {
-      field: "mandatory",
-      title: "Mandatory",
-      width: 70,
-      template: function (dataItem) {
-      if (dataItem.dataset_gid > 0) {
-          return '<input type="checkbox" ' + (dataItem.dataset_gid == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" />';
-      } else {
-          return '<input type="checkbox" ' + (dataItem.dataset_gid == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" />';
-      }
-      }
-      }],
-      editable: true,
+               field: "field_typeval",
+               title: "Field Typeval",
+               hidden: true
+           },
+          {
+          field: "mandatory",
+          title: "Mandatory",
+          width: 70,
+          template: function (dataItem) {
+          if (dataItem.dataset_gid > 0) {
+              return '<input type="checkbox" ' + (dataItem.dataset_gid == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" />';
+          } else {
+              return '<input type="checkbox" ' + (dataItem.dataset_gid == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" />';
+          }
+          }
+          }],
+          editable: true,
       });
 
       $(function () {
@@ -6462,26 +6650,6 @@
                   }
               }
           }
-
-      function add() {
-        // ds_name1 = "sheet1";
-          if($("#txt_source_db_type").val() == "API") {
-              ds_name1 = selectedAPIDS;
-          } else {
-              //  ds_name1 = "sheet1";
-          }
-          var grid = $("#grid_dsfieldMapping").data("kendoGrid");
-          var dataSource = grid.dataSource;
-          var rowIndex = 2;
-          grid.select("tr:eq(" + rowIndex + ")");
-          var max = 0;
-          var lastSeqNo = grid.dataSource._data.length;
-          var newSeqNo = parseInt(lastSeqNo) + 1;
-          dataSource.add({seq_no: newSeqNo, mandatory: "N",dataset_field: "", field_type: "TEXT",field_length: "255", dataset_gid: 0,  field_typeval: "", target_dataset_field: "", source_dataset_field: "", dataset_name: ds_name1});
-          var lastRow = grid.tbody.children().last();
-          grid.content.scrollTop(lastRow.position().top);
-          grid.refresh();
-      }
 
       function addfieldmapping() {
           var ds_code = $("#txtds_code").val();
@@ -6630,7 +6798,6 @@
 
       function fieldTypeEditor(container, options) {
           var dropdown = $("<select id='" + options.field + "' name='" + options.field + "' style='width:100%; color:black;'></select>");
-
           for (var i = 0; i < field_list.length; i++) {
               var optionId = field_list[i].code;
               var optionName = field_list[i].desc;
@@ -6832,7 +6999,99 @@
                    }
                  }
               } else if(pplDatasetType == "New" && (parseInt(options.model.pplfieldmapping_gid) == 0 || options.model.pplfieldmapping_gid == null)) {
-                       // var data1 = sourceFieldNames.filter(item => (item.source_type == 'Expression' || item.sourcefield_name == "-- Select --"));
+                       if($("#txt_source_db_type").val() == "API") {
+                                // var grid = $("#grid_dsfieldMapping").data("kendoGrid");
+                                //  var dataItems = grid.dataSource.view();
+
+                                //  function normalize(name) {
+                                //      return name ? name.replace(/^\*\s*/, '').trim().toLowerCase() : '';
+                                //  }
+
+                                //  var normalizedCurrent = normalize(currentValue);
+                                //      // 1. Get all mapped ppl_field_names (excluding empty & "-- Select --")
+                                //  var mappedFields = dataItems
+                                //      .map(item => normalize(item.ppl_field_name))
+                                //      .filter(name => name && name !== '-- select --');
+
+                                //  // 2. Filter sourceFieldNames first for Expression or exact match
+                                //  var data = sourceFieldNames.filter(item => {
+                                //      return (
+                                //          item.source_type === 'Expression' ||
+                                //          item.sourcefield_name === pplFieldName
+                                //      );
+                                //  });
+
+                                //  // 3. Remove already mapped fields (except current value)
+                                //  data = data.filter(item => {
+                                //      var normalizedSource = normalize(item.sourcefield_name);
+                                //      return (
+                                //          normalizedSource === normalizedCurrent || // allow current even if mapped
+                                //          !mappedFields.includes(normalizedSource)
+                                //      );
+                                //  });
+                                // for (var i = 0; i < data.length; i++) {
+                                //  var option = data[i].sourcefield_name;
+                                //  var optionValue = option.startsWith("*") ? option.substring(1) : option;
+                                //  var selected = option === currentValue ? 'selected' : '';
+                                //  var textColor = option.startsWith("*") ? 'color: red;' : 'color: black;';
+                                //  dropdownHTML += '<option style="' + textColor + '" value="' + optionValue + '" ' + selected + '>' + option + '</option>';
+                                // }
+                                    var grid = $("#grid_dsfieldMapping").data("kendoGrid");
+                                    var dataItems = grid.dataSource.view();
+
+                                    // normalize names (lowercase, trim, remove leading *)
+                                    function normalize(name) {
+                                        return name ? name.replace(/^\*\s*/, "").trim().toLowerCase() : "";
+                                    }
+
+                                    var normalizedCurrent = normalize(currentValue);
+
+                                    // 1. Get all already-mapped ppl_field_names
+                                    var mappedFields = dataItems
+                                        .map(item => normalize(item.ppl_field_name))
+                                        .filter(name => name && name !== "-- select --");
+
+                                    // 2. Filter sourceFieldNames
+                                    var data = sourceFieldNames.filter(item => {
+                                        var normalizedSource = normalize(item.sourcefield_name);
+
+                                        // Always include Expression
+                                        if (item.source_type === "Expression") {
+                                            return true;
+                                        }
+
+                                        // Allow the current row value even if mapped
+                                        if (normalizedSource === normalizedCurrent) {
+                                            return true;
+                                        }
+
+                                        // Exclude all existing mapped fields
+                                        return !mappedFields.includes(normalizedSource);
+                                    });
+
+                                    // 3. Build dropdown
+                                    for (var i = 0; i < data.length; i++) {
+
+                                        var option = data[i].sourcefield_name;
+                                        var isExpression = data[i].source_type === "Expression";
+
+                                        // Expression must start with *
+                                        if (isExpression && !option.startsWith("*")) {
+                                            option = "*" + option;
+                                        }
+
+                                        // remove * only from actual value
+                                        var optionValue = option.replace(/^\*/, "");
+
+                                        var selected = normalize(option) === normalizedCurrent ? "selected" : "";
+                                        var textColor = isExpression ? "color:red;" : "color:black;";
+
+                                        dropdownHTML +=
+                                            '<option style="' + textColor + '" value="' + optionValue + '" ' + selected + '>' +
+                                            option +
+                                            '</option>';
+                                    }
+                           } else {
                         var data1 = sourceFieldNames.filter(item =>
                             item.source_type === 'Expression' ||
                             item.sourcefield_name === pplFieldName ||
@@ -6876,6 +7135,7 @@
                       dropdownHTML += '<option style="' + textColor + '" value="' + optionValue + '" ' + selected + '>' + option + '</option>';
 
                         }
+                    }
               }
           dropdownHTML += '</select>';
           container.append(dropdownHTML);
@@ -6921,8 +7181,7 @@
 
 <script>
             document.addEventListener("DOMContentLoaded", function () {
-                addHeaderRow(); // to load the api url at first time.
-                
+                addHeaderRow();                
                 const radioButtons = document.querySelectorAll('input[name="radioFilter"]');
                 const formNoneDiv = document.getElementById("formnone");
                 const formDataDiv = document.getElementById("formdata");
@@ -6968,20 +7227,20 @@
                     return tr;
                 }
 
-                      function paramChanged(inputEl) {
-                        const row = inputEl.closest('tr');
-                        const key = row.querySelector('.key').value.trim();
-                        const val = row.querySelector('.val').value.trim();
-                        const lastRow = tableBody.lastElementChild;
+                 function paramChanged(inputEl) {
+                    const row = inputEl.closest('tr');
+                    const key = row.querySelector('.key').value.trim();
+                    const val = row.querySelector('.val').value.trim();
+                    const lastRow = tableBody.lastElementChild;
 
-                        if (row === lastRow && (key !== '' || val !== '')) {
-                          addParamRow();
-                        }
+                    if (row === lastRow && (key !== '' || val !== '')) {
+                        addParamRow();
+                    }
 
-                        updateUrlFromTable();
-                      }
+                    updateUrlFromTable();
+                 }
 
-                      function updateUrlFromTable() {
+                 function updateUrlFromTable() {
                         const base = urlInput.dataset.baseUrl || (urlInput.value.includes('?')
                           ? urlInput.value.split('?')[0]
                           : urlInput.value.split('?')[0] || '');
@@ -6997,7 +7256,7 @@
 
                         const qs = params.toString();
                         urlInput.value = qs ? `${base}?${qs}` : base;
-                      }
+                  }
 
                       // Smart URL → table parsing without breaking typing
                       let urlParseTimeout;
@@ -7059,20 +7318,22 @@
                 const selected_type = document.querySelector('input[name="radioFilter"]:checked');
                  var data = {};
                     data.pipeline_code = pipelineCode;
-                    data.api_url = havejsonresponse? "" : $('#url').val();
-                    data.json_response = havejsonresponse;
-                    data.api_payload = havejsonresponse? "" : $("#comment").val(),
+                    data.api_url = $('#url').val();
+                    data.json_response = $('#txt_apiResponse').val() == "" ? "[]" : JSON.stringify($('#txt_apiResponse').val());
+                    data.api_payload = $("#comment").val(),
                     data.api_method = $("#txt_method").val(),
-                    data.api_payload_type = havejsonresponse? "" : selected_type.value;
-                    data.api_header = havejsonresponse? "" : getHeadersJson();
+                    data.api_payload_type = selected_type.value;
+                    data.api_header =  getHeadersJson();
                     data.have_auth_url = have_auth_checkbox.checked ? "Y" : "N";
                     data.auth_url = havejsonresponse? "" : $('#txt_auth_url').val();
                     data.auth_user_name = havejsonresponse? "" : $('#txt_auth_user_name').val();
                     data.auth_user_pswd = havejsonresponse? "" : $('#txt_auth_user_pswd').val();
-                    data.auth_token = havejsonresponse? "" : $('#auth_token').val();
-                    data.auth_type = havejsonresponse? "" : $('#sel_auth').val();
-                    data.auth_token_keyname = havejsonresponse ? "" : $('#txt_token_key').val();
+                    data.auth_token = $('#auth_token').val();
+                    data.auth_type = $('#sel_auth').val();
+                    data.auth_token_keyname = $('#txt_token_key').val();
                     data.remarks = "";
+                    data.inclusion_filter_cond = $('#txt_api_filtercond').val();
+                    data.rejection_filter_cond = $('#txt_api_rejectioncond').val();
                     data.delete_flag = "N";
                     if(pplapigid == "") {
                         data.api_gid = "0";
@@ -7106,7 +7367,6 @@
                           success: function (response) {
                               if (response == "Record Updated Successfully.") {
                                   fetchpplapiheader();
-                                 // getAPIResponse();
                               }
                           },
                           error: function (er) {
@@ -7196,21 +7456,20 @@
                     success: function (response) {
                         if (response.length > 0) {
                             $('#txt_api_gid').val(response[0].api_gid);
-                            $('#url').val(response[0].api_url)[0].dispatchEvent(new Event('input', { bubbles: true }));                            
-                             $('#txt_apiResponse').val(response[0].json_response == "[]" ? "" : response[0].json_response);
+                            $('#url').val(response[0].api_url)[0].dispatchEvent(new Event('input', { bubbles: true }));
+                             var api_response = response[0].json_response == "[]" ? "" : JSON.parse(response[0].json_response);
+                             $('#txt_apiResponse').val(api_response);
                              $('#txt_auth_url').val(response[0].auth_url);
                              $('#txt_auth_user_name').val(response[0].auth_user_name);
                              $('#txt_auth_user_pswd').val(response[0].auth_user_pswd);
                              $('input[name="radioFilter"][value="' + response[0].api_payload_type + '"]').prop("checked", true);
                              $("#txt_method").val(response[0].api_method);
                              $("#comment").val(response[0].api_payload == "[]" ? "" : response[0].api_payload);
-                             $("#sel_auth").val(response[0].auth_type);
                              $("#auth_token").val(response[0].auth_token);  
                              $("#txt_have_auth").prop("checked", response[0].have_auth_url === 'Y');
-                             /*if(response[0].have_auth_url === 'Y') {
-                                 validateauthurl("No");
-                             } */
                              $("#txt_token_key").val(response[0].auth_token_keyname);
+                             $("#txt_api_filtercond").val(response[0].inclusion_filter_cond);
+                             $("#txt_api_rejectioncond").val(response[0].rejection_filter_cond);
                              // Code to add header
                              const { headers, authHeader } = parseApiHeaders(response[0].api_header);
                                // clear & populate header table
@@ -7227,7 +7486,7 @@
                 });
             }
 
-                function parseApiHeaders(rawHeaderJson) {
+            function parseApiHeaders(rawHeaderJson) {
                     let headersArray = [];
 
                     if (!rawHeaderJson || rawHeaderJson === "[]" || rawHeaderJson === "") {
@@ -7285,7 +7544,7 @@
                     });
 
                     return { headers: uniqueHeaders, authHeader: authHeaderValue };
-                }
+            }
 
 
             function GetSrcApilist(pipeline_code) {
@@ -7436,21 +7695,25 @@
         const payload = buildPayload();
         $.ajax({
             type: "POST",
-            //url: '@Url.Action("getAPIResponse", "Pipeline")?url=' + url,
             url: '@Url.Action("CallExternalApi", "Pipeline")',
             dataType: "json",
             data: JSON.stringify(payload),
             contentType : 'application/json; charset=utf-8',
             success: function (response) {
-                if (response.error) {
-                   
+                if (response.error) {                   
                     loadapigrid([]);
                     if(type == "Yes") {
                         jAlert(response.error, "Connector");
                     }                    
                     return;
                 }
-                apiresponse_structure(response,type);
+                if($('#txt_apiResponse').val()){
+                      apiresponse_structure($('#txt_apiResponse').val(),type);
+                } else {
+                    urlResponse = JSON.stringify(response);
+                    apiresponse_structure(response,type);
+                }
+                
             },
             error: function (xhr) {                   
                     var errObj;
@@ -7470,17 +7733,16 @@
 
     function apiresponse_structure(in_response,in_type){
         var default_key = $("#txt_apiResponse").val() ? "Json Resultset" : "Api Resultset";
-          datasetfiledname = in_response;
-            loadapigrid(in_response);     
-
-                    if(in_type == "Yes") {
-                        jAlert("API Validated Successfully..!", "Connector");
-                    }
-                    saveapiHeader();
-                    $("#div_api").show();
-                    $("#grid_tvc").show();
-                    document.getElementById("btn_nextppl1").disabled = false;
-                }
+          datasetfiledname = in_response;           
+            loadapigrid(in_response);   
+             if(in_type == "Yes") {
+                jAlert("API Validated Successfully..!", "Connector");
+            }
+            saveapiHeader();
+            $("#div_api").show();
+            $("#grid_tvc").show();
+            document.getElementById("btn_nextppl1").disabled = false;
+    }
 
 
             document.getElementById("btn_nextppl").addEventListener("click", function () {
@@ -7531,6 +7793,17 @@
                     else if ((pplcsdheaderGid == 0 || pplcsdheaderGid == "" || pplcsdheaderGid == "0" || pplcsdheaderGid == undefined) && $("#txt_source_db_type").val() == "CSV") {
                         jAlert("Please fill and save all the mandatory fields.", "Connector");
                         return;
+                     } else if($("#txt_source_db_type").val() == "API" && activeTabId === 'templateSelection'){
+                         if($("#api_run_type").val() == ""){
+                              jAlert("Please Select run type..!", "Connector");
+                              return;
+                         } else if($("#api_run_type").val() == "Scheduled Run" && ($("#api_txt_cronexpr").val() == "")){
+                            jAlert("Please enter cron expression..!", "Connector");
+                            return;
+                         } else {
+                             pplsave();
+                             loadexistingdataset("");
+                         }
                     }
                     else {
                         if (activeTabId === 'templateSelection') {
@@ -7560,8 +7833,14 @@
                             $('#txt_trgdataset').val(dataItem.dataset_name);
                             if (dataItem.selected == true) {
                                 if ($("#txt_source_db_type").val() == "API") {
-                                    fetchpplapiheader();
-                                    getAPIResponse("No");
+                                    if($("#txt_have_auth").val() == "Y"){
+                                        var conn_code = $('#connectors').val();
+                                        $("#sel_auth").val("bearer");
+                                        refetchapiTokendetail(conn_code);
+                                    } else {
+                                        fetchpplapiheader();
+                                        getAPIResponse("No");
+                                    }
                                 } else if ($("#txt_source_db_type").val() == "Excel" || $("#txt_source_db_type").val() == "CSV") {
                                     getdatasetfield();
                                 }
@@ -7584,10 +7863,11 @@
                             var sourcefield = items.map(f => f.sourcefield_name).toString();
                             loadexistingdataset(sourcefield);
                         }
-                        var conn_code = document.getElementById("connectors");
+                        // var conn_code = document.getElementById("connectors");
                         var label = document.getElementById('lbl_info');
                         var label1 = document.getElementById('lbl_info1');
                         var label2 = document.getElementById('lbl_info2');
+                         var conn_code = document.getElementById("connectors");
                         var selectedOption = conn_code.options[conn_code.selectedIndex];
                         var selectedText = selectedOption.textContent;
                         label.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
@@ -7598,6 +7878,8 @@
                         $('#datasetSelection').addClass('active');
                         $('#templateSelection_conf').hide();
                         $('#datasetSelection_conf').show();
+                         $("#tab3").hide();
+                         $("#tab3").removeClass("show-tab-important");
                 }
                 else if (activeTabId === 'datasetSelection') {
                     if(selectedDataset == ""){
@@ -7621,12 +7903,22 @@
                           const datafieldselection = document.getElementById("datafieldselection");
                             fieldmappingConf.style.display = "none";
                             filtersConf.style.display = "none";
-                            apiFieldTab.classList.add("active")
+                            apiFieldTab.classList.add("active");
                             fieldmappingTab.classList.remove("active");
                             filtersTab.classList.remove("active");
                             apiDSSelection_conf.style.display = "block";
                             datafieldselection.style.display = "block";
                             loadapiDatastrutureGrid();
+                            var label = document.getElementById('lbl_info');
+                            var label1 = document.getElementById('lbl_info1');
+                            var label2 = document.getElementById('lbl_info2');                      
+                            var conn_code = document.getElementById("connectors");
+                            var selectedOption = conn_code.options[conn_code.selectedIndex];
+                            var selectedText = selectedOption.textContent;
+                            label.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
+                            label1.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
+                            label2.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
+
                            }                          
                            else {                      
                             $('#cc_progressbar li').removeClass('active');
@@ -7643,8 +7935,6 @@
                         var label = document.getElementById('lbl_info');
                         var label1 = document.getElementById('lbl_info1');
                         var label2 = document.getElementById('lbl_info2');
-                        var selectedOption = conn_code.options[conn_code.selectedIndex];
-                        var selectedText = selectedOption.textContent;
                         label.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
                         label1.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
                         label2.innerHTML = "Pipeline Name -> " + $("#txtppl_name").val() + ";Connector Name -> " + selectedText + ";Target Dataset -> " + selectedDataset;
@@ -7704,6 +7994,7 @@
                     if(gridhasChange) {
                         jAlert("Please click to save the modified changes or click revert to cancel changes", "Connector");
                     }else{
+                        getdatasetfield();
                         $('#datasetSelection').addClass('active');
                         $('#templateSelection').removeClass('active');
                         $('#templateSelection_conf').hide();
@@ -7728,10 +8019,10 @@
                 var label = document.getElementById('parent_pipeline');
                 label.innerHTML = "Note: Changes can be done only in Parent Pipeline --> " + parent_dataset_name;
                 $("#grid_dsfieldMapping").remove();
-                $('#dataset_fieldMapping').append('<div id="grid_dsfieldMapping" style="width: 97.5%; height: 300px !important; margin-top: 21px;margin-left: 15px;"></div>');
+                $('#dataset_fieldMapping').append('<div id="grid_dsfieldMapping" style="width: 97.5%; height: 290px !important; margin-top: 10px;margin-left: 15px;"></div>');
 
-                    var columnConfig = [];
-                    var isexistingDataset = datasetfield.length > 0 && datasetfield[0].system_flag === 'P' && datasetfield[0].its_parent_pipeline === 'Y';
+                var columnConfig = [];
+                var isexistingDataset = datasetfield.length > 0 && datasetfield[0].system_flag === 'P' && datasetfield[0].its_parent_pipeline === 'Y';
                 if (isexistingDataset) {
                 // Show "Source Field Name" first
                 columnConfig = [
@@ -7756,10 +8047,6 @@
                     },
                     { field: "dataset_code", title: "Dataset Name", hidden: true },
                     { field: "ppl_field_name", title: "Source Field Name", editor: datafieldEditor, template: function(dataItem) {
-                        // const matchedSources = sourceFieldNames.filter(item =>
-                        //                 item.source_type === "Expression" &&
-                        //                 item.sourcefield_name.replace(/^\*\s*/, '') === dataItem.ppl_field_name.replace(/^\*\s*/, '')
-                        //             );
                             const matchedSources = sourceFieldNames.filter(item =>
                                 item.source_type === "Expression" &&
                                 typeof item.sourcefield_name === 'string' &&
@@ -7807,7 +8094,6 @@
                 // Show "Dataset Field Name" first
                 columnConfig = [
                     { field: "pplfieldmapping_gid", hidden: true },
-                    // { field: "has_saved", hidden: true },
                     { field: "parent_pipeline_code", hidden: true },
                     { field: "pplsourcefield_gid", hidden: true },
                     { field: "pipeline_code", hidden: true },
@@ -7828,10 +8114,6 @@
                     { field: "dataset_code", title: "Dataset Name", hidden: true },
                     { field: "field_name", title: "Dataset Field Name", width: 100 },
                    { field: "ppl_field_name", title: "Source Field Name", editor: datafieldEditor, template: function(dataItem) {
-                    // const matchedSources = sourceFieldNames.filter(item =>
-                    //                     item.source_type === "Expression" &&
-                    //                     item.sourcefield_name.replace(/^\*\s*/, '') === dataItem.ppl_field_name.replace(/^\*\s*/, '')
-                    //                 );
                     const matchedSources = sourceFieldNames.filter(item =>
                             item.source_type === "Expression" &&
                             typeof item.sourcefield_name === 'string' &&
@@ -7914,7 +8196,7 @@
                         },
                      pageSize: 100,
                     },
-                    height: 300,
+                    height: 290,
                     sortable: true,
                     filterable: true,
                     selectable: "row",
@@ -8125,7 +8407,7 @@
 
             function Newdatasetgrid(dataset) {
                 $("#grid_dataset").remove();
-                $('#ds_grid').append('<div id="grid_dataset" style="height: 230px !important; width: 97%; margin-top: 10px;margin-left: 21px;"></div>');
+                $('#ds_grid').append('<div id="grid_dataset" style="height: 230px !important; width: 55%; margin-top: 10px;margin-left: 21px;"></div>');
                 $("#grid_dataset").kendoGrid({
                 dataSource: {
                     data: dataset,
@@ -8167,8 +8449,8 @@
                                     return `
                                         <div style="text-align:center;">
                                             <input type="radio" name="radioGroup" ${dataItem.selected ? 'checked' : ''} onclick="TableDSselectRow($(this))" />
-                                            <i class="glyphicon glyphicon-trash" style="color:red; margin-left: 13% !important;" onclick="TableDSdeleteRow($(this))"></i>
-                                            <i class="icon-pdf" onclick="pdfDownload($(this))" title="PDF Download" style="margin-left: 10px; color: #d9534f;"></i>
+                                            <i class="glyphicon glyphicon-trash" style="color:red; margin-left: 10% !important;" onclick="TableDSdeleteRow($(this))"></i>
+                                            <i class="icon-pdf" onclick="pdfDownload($(this))" title="PDF Download" style="margin-left: 8px; color: #d9534f;"></i>
                                             &nbsp;${dataItem.downloadIcon || ''}
                                            
                                         </div>
@@ -8319,7 +8601,7 @@
                     );
                    try {
                         $("#TablenameGrid").remove();
-                        $('#srcapidssearch').append('<div id="TablenameGrid" style="width: 96%; height: 350px !important; margin-top: 15px;margin-left: 0px;"></div>');
+                        $('#srcapidssearch').append('<div id="TablenameGrid" style="width: 96%; height: 277px !important; margin-top: 15px;margin-left: 0px;"></div>');
                         $("#TablenameGrid").kendoGrid({
                             dataSource: {
                                 data: uniqueData,
@@ -8333,7 +8615,7 @@
                                 },
                                 pageSize: 100,
                             },
-                            height: 306,
+                            height: 277,
                             width: 1058,
                             editable: false,
                             pageable: true,
@@ -8424,7 +8706,7 @@
 
         // Add container
         $("#srcapidssearch").append(
-            '<div id="TablenameGrid" style="width:96%; height:355px; margin-top:15px;"></div>'
+            '<div id="TablenameGrid" style="width:96%; height:277px; margin-top:15px;"></div>'
         );
 
         // Initialize Kendo TreeList
@@ -8449,7 +8731,7 @@
                     }
                 }
             },
-            height: 355,
+            height: 277,
             selectable: true,
             editable: true,
             columns: [
@@ -8507,37 +8789,34 @@
 
     function jsonKeyValidate(){
         const treeList = $("#TablenameGrid").data("kendoTreeList");
-    const allData = treeList.dataSource.data(); // flat list (id/parentId based)
-    let dt = [];
-    let dtNode = [];
-    let selectedKeys = [];
+        const allData = treeList.dataSource.data(); // flat list (id/parentId based)
+        let dt = [];
+        let dtNode = [];
+        let selectedKeys = [];
+        // Read all rows from dataSource
+        allData.forEach(item => {
+            if (item.selected) {
+                dt.push({
+                    node: item.keyNode,
+                    level: item.level,
+                    parent_node: item.parentKey
+                });
+                selectedKeys.push(item.keyNode);
+            }
+        });
 
-    // Read all rows from dataSource
-    allData.forEach(item => {
-        if (item.selected) {
-            dt.push({
-                node: item.keyNode,
-                level: item.level,
-                parent_node: item.parentKey
-            });
-            selectedKeys.push(item.keyNode);
+        if (dt.length === 0) {
+            alert("Please select at least one key field to validate.");
+            return;
         }
-    });
-
-    if (dt.length === 0) {
-        alert("⚠️ Please select at least one key field to validate.");
-        return;
-    }
-
-    // Find max level
-    const maxLevel = Math.max(...dt.map(d => d.level));
-    let keyLevel = maxLevel;
-    let parentKey = "";
-    let parentKey1 = "";
-    let siblingKey = "";
-    let childKey = "";
-
-    // Build dtNode array (like in your C# code)
+        // Find max level
+        const maxLevel = Math.max(...dt.map(d => d.level));
+        let keyLevel = maxLevel;
+        let parentKey = "";
+        let parentKey1 = "";
+        let siblingKey = "";
+        let childKey = "";
+            // Build dtNode array (like in your C# code)
     do {
         siblingKey = "";
         let filtered = dt.filter(d => {
@@ -8562,7 +8841,8 @@
             }
             parentKey = row.parent_node;
 
-            if (i !== 0) {
+            if (i !== 0)
+            {
                 siblingKey += row.node + ",";
             }
             i++;
@@ -8587,18 +8867,12 @@
         keyLevel--;
     } while (keyLevel >= 0);
 
-    // Sort by level ascending
-    dtNode.sort((a, b) => a.level - b.level);
+         // Sort by level ascending
+         dtNode.sort((a, b) => a.level - b.level);
 
-    // Display result
-    console.log("Selected Keys:", selectedKeys);
-    console.log("dt:", dt);
-    console.log("dtNode:", dtNode);
-
-    let message = "Validation Successful!\n\nSelected Keys:\n" +
+        let message = "Validation Successful!\n\nSelected Keys:\n" +
         selectedKeys.map(k => " - " + k).join("\n");
          jAlert(message, "Connector");
-   // alert(message);
     }
          
             function onselectedapiDS(e){
@@ -8636,7 +8910,7 @@
                                        if(res.length >= 0 && res[0].out_result == 1){
                                            e.checked = true;
                                            jAlert(res[0].out_msg, "Connector");
-                                           getAPIResponse("Yes");
+                                           getAPIResponse("No");
                                        }
                                   },
                                   error: function (er) {
@@ -8691,9 +8965,9 @@
                         var database_name = $('#databasename').val();
                         getmysqlsrcfields(conn_code, ppl_code, database_name, v_srctblviewqry_desc, v_srctblviewqry_type);
                     } else if ($("#txt_source_db_type").val() == "API"){
-                            var keys = Object.keys(apiResponseStructure[ds_name1]);
-                            var commaSeparatedKeys = keys.join(',');
-                            loadexistingdataset(commaSeparatedKeys);
+                         var keys = extractFirstLevelKeys(datasetfiledname);
+                        var commaSeparatedKeys = keys.join(',');
+                        loadexistingdataset(commaSeparatedKeys);
                     }
                 } else if (type === 'existingall') {
                     document.getElementById('add_newds').style.display = 'none';
@@ -8776,6 +9050,8 @@
                         } else if($("#txt_source_db_type").val() == "MySql"){
                             loadexistingdataset("");
                         } 
+                        loadsourcefieldGrid([]);
+                        loadsourcefieldGrid_unmatched([]);
                     } else {
                            jAlert(res[0].out_msg, "Connector");
                         }
@@ -8968,6 +9244,8 @@
                                var database_name = $('#databasename').val();
                                var ds_code = $("#txtds_code").val();
                                srcmysqlfields(conn_code, ppl_code, database_name, v_srctblviewqry_desc, v_srctblviewqry_type, ds_code, "Yes");
+                            } else if ($("#txt_source_db_type").val() == "API"){                          
+                                loadexistingdataset("");
                             }
                                 $("#txtds_name").val("");
                                 $("#txtds_category").val("");
@@ -8984,7 +9262,7 @@
                                     loadexistingdataset("");
                                 } else if($("#txt_source_db_type").val() == "API"){
                                     saveapisrcfields("No");
-                                     loadexistingdataset("");
+                                    loadexistingdataset("");
                                  }
                             } else {
                                jAlert(res[0].out_msg, "Connector");
@@ -9067,14 +9345,16 @@
                                 nextButton.disabled = false;
                                 expressionButton.disabled = false;
                             } else {
-                                nextButton.disabled = true;
-                                expressionButton.disabled = true;
-                            }
-                            // for(let i = 0 ; i< data.length; i++){
-                            //     if(data[i]["source_type"] == "Expression"){
+                                 var activeTabId = $('#cc_progressbar li.active').attr('id');
+                                  if(activeTabId === 'fieldmappingTab') {
+                                      nextButton.disabled = true;
+                                      expressionButton.disabled = true;
+                                } else {
+                                     nextButton.disabled = false;
+                                     expressionButton.disabled = false;
+                                }
 
-                            //     }
-                            // }
+                            }
                               }
                               dsfieldMapgrid(data);
                              },
@@ -9095,6 +9375,14 @@
                         success: function (data) {
                             if(data.length > 0) {
                                 sourceFieldNames = data;
+                                if(sourceFieldNames.length > 1) {
+                                     var removeSelect = sourceFieldNames.filter(item => item.sourcefield_name != "-- Select --")
+                                     loadsourcefieldGrid(removeSelect);
+                                      loadsourcefieldGrid_unmatched(removeSelect);
+                                } else {
+                                    loadsourcefieldGrid([]);
+                                    loadsourcefieldGrid_unmatched([]);
+                                }                          
                             }
                             },
                         error: function (er) {
@@ -9184,10 +9472,12 @@
         } else if (radio4.checked) {
             v_duplicate_mode = "Continue With Duplicates";
         }
-            if(v_keydrop.checked == false && v_duplicate_mode == 'Continue With Duplicates' && upldmode == 'Clean and Insert'){
+            if(v_keydrop.checked == false && v_duplicate_mode == 'Continue With Duplicates' && (upldmode == 'Clean and Insert' || upldmode == 'Truncate and Insert' )){
                 document.getElementById("keyfield_drp_s").style.display = "none";
+                 $("#keyfield_drp").data("kendoMultiSelect").enable(false);
         } else {
             document.getElementById("keyfield_drp_s").style.display = "inline";
+            $("#keyfield_drp").data("kendoMultiSelect").enable(true);
         }
     }
 
@@ -9302,9 +9592,57 @@
     // API Changes By Hema
 
     function validate(){    
+        if(hasActiveDataset == true){
+            let text = "On changing URL details (Expression, Inclusion,\n" +
+                        "Rejection, Validation, Conversion Rules) will be deleted.\n " +
+                        " Are You sure to change the API URL Details ?  ";
+            jConfirm(text, "Connector", function (f) {
+          if (f == true) {
+              // delete
+                var pipelineCode = $('#txt_ppl_code').val();
+                var data = {};
+                data.dataset_systemflag = "";
+                data.pipelinedet_id = 0;
+                data.pipeline_code = pipelineCode;
+                data.dataset_name = "",
+                data.datasetCode = "";
+                data.dataset_id = 0;
+                data.dataset_category = "",
+                data.clone_dataset = "";
+                data.active_status = "";
+                data.inactive_reason = "";
+                data.in_action = "EXCELCHANGE";
+                data.in_action_by =_user_code;
+                data.pipelinedet_dataset_type = $('input[name="rdo_dsmode"]:checked').val();
+                $.ajax({
+                type: "Post",
+                url: '@Url.Action("datasetheader", "Pipeline")',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {    
+                        var res = JSON.parse(response);
+                        jAlert(res[0].out_msg, "Connector");
+                          checkvalidation();
+                    },
+                    error: function (er) {
+                        jAlert(er, "Error");
+                    }
+                });
+            } else {
+                 fetchppl($("#txt_ppl_gid").val());
+                }
+            });
+        } else {
+            checkvalidation();
+        }
+    }
+
+    function checkvalidation(){
         if($("#txt_have_auth").val() == "Y"){
             var conn_code = $('#connectors').val();
-               refetchapiTokendetail(conn_code);
+              $("#sel_auth").val("bearer");
+             refetchapiTokendetail(conn_code);
         } else {
         var jsonData = $("#txt_apiResponse").val();
         var url = $("#url").val();
@@ -9331,19 +9669,7 @@
             });
         } else if(url){
             var haveAuthUrl = document.getElementById("txt_have_auth");
-             getAPIResponse("Yes");
-           /* if(haveAuthUrl.checked) {
-                validateauthurl("No");
-                const authKeyName = $("#txt_token_key").val().trim();
-                const stringauthResponse = $("#auth_response").val().trim();
-                const authResponse = JSON.parse(stringauthResponse);
-                const value = authResponse[authKeyName];
-                $("#auth_token").val(value ?? "");
-                getAPIResponse("Yes");
-            } else {
-                getAPIResponse("Yes");
-            } */
-            
+             getAPIResponse("Yes");         
             } 
         }
     }
@@ -9406,7 +9732,7 @@
         }
     }
 
-        function getHeadersJson() {
+    function getHeadersJson() {
         const headers = {};
         const rows = document.querySelectorAll("#headerTableBody tr");
 
@@ -9974,12 +10300,30 @@
             url: '@Url.Action("GetApiAuthToken", "Connectors")' + '?connection_code=' + connection_code,
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                // var token = JSON.parse(response.auth_token);
-                var token = response.auth_token;
-                $('#auth_token').val(token);
-                $('#sel_auth').val('bearer');
-                getAPIResponse("Yes");
+            success: function (response) {              
+                $('#txt_auth_method').val(response.auth_method);
+                $('#txt_auth_url').val(response.auth_url);
+                $('#txt_token_key').val(response.auth_token_keyname);
+                $('#auth_comment').val(response.auth_payload_json);
+                $('#auth_response').val(JSON.stringify(response, null, 2));
+                $("#txt_auth_url").val(response.auth_url).trigger("input");
+                $("#sel_auth").val('bearer');
+                if (response.auth_header_json) {
+                    try {
+                        const headerObj = JSON.parse(response.auth_header_json);
+                        const tableBody = document.getElementById("auth_headerTableBody");
+                        tableBody.innerHTML = ""; // clear old rows
+                        for (const [key, val] of Object.entries(headerObj)) {
+                            addAuthHeaderRow(key, val);
+                        }
+                        // Add one empty row at the end for user to add new headers
+                        addAuthHeaderRow();
+                    } catch (e) {
+                        console.error("Invalid header JSON:", e);
+                    }
+                }
+               // $("#authurl_Popup").show();   
+                validateauthurl("No");
                 },
             error: function (er) {
                 jAlert(er, "Error");
@@ -9992,12 +10336,19 @@
         var datasetCode = $("#txtds_code").val();
         var userCode = _user_code;
         var payload = apiResponseStructure;
+        var baseUrl = '@Url.Action("Addpplapisrcfield", "Pipeline")';
+        var fullUrl = baseUrl
+                        + '?pipeline_code=' + pipelineCode
+                        + '&dataset_code=' + datasetCode
+                        + '&user_code=' + userCode
+                        + '&datasetinsert=' + val;
         $.ajax({
             type: "POST",
-            url: '/Pipeline/Addpplapisrcfield?pipeline_code=' + pipelineCode +
-                    '&dataset_code=' + datasetCode +
-                    '&user_code=' + userCode+
-                    '&datasetinsert='+val,
+             url: fullUrl,
+            // url: '/Pipeline/Addpplapisrcfield?pipeline_code=' + pipelineCode +
+            //         '&dataset_code=' + datasetCode +
+            //         '&user_code=' + userCode+
+            //         '&datasetinsert='+val,
             contentType: 'application/json; charset=utf-8',
             // data: JSON.stringify(apiResponseStructure[ds_name1]),
             data:JSON.stringify(payload),
@@ -10009,13 +10360,266 @@
 
                     }
                 }
-                // loadexistingdataset("");
                 getdatasetfield();
+                getsourcefielddrpdown();
             },
             error: function (error) {
                 jAlert('Failed to save result structure', "Connector");
             }
         });
     }
+
+    function loadsourcefieldGrid(sourcelist){
+        $("#grid_sourcefields").remove();
+        $('#sourcefield_grid').append('<div id="grid_sourcefields" style="height: 332px !important; width: 97%;"></div>');
+        $("#grid_sourcefields").kendoGrid({
+        dataSource: {
+            data: sourcelist,
+            pageSize: 100,
+            schema: {
+                model: {
+                    fields: {
+                        sourcefield_name: {type: "string"},
+                        sourcefield_type: {type: "string"}
+                    }
+                }
+            }
+        },
+        height: 332,
+        groupable: false,
+        edit: OnEdit,
+        sortable: true,
+        dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_sourcefields').data('kendoGrid').tbody.children();
+            },
+        filterable: true,
+        selectable: "row",
+        navigatable: true,
+        pageable: true,
+        resizable: true,
+        columns: [                   
+            {
+                field: "sourcefield_name",
+                title: "Source Field Name",
+                width: 70,
+                },{
+                    field:"source_type",
+                    title:"Source Type",
+                    width:30,
+                }],
+            editable: false,
+        });
+    }
+
+    function loadsourcefieldGrid_unmatched(sourcelist){
+        $("#grid_sourcefields_unmatched").remove();
+        $('#sourcefield_grid_unmatched').append('<div id="grid_sourcefields_unmatched" style="height: 340px !important; width: 97%;"></div>');
+        $("#grid_sourcefields_unmatched").kendoGrid({
+        dataSource: {
+            data: sourcelist,
+            pageSize: 100,
+            schema: {
+                model: {
+                    fields: {
+                        sourcefield_name: {type: "string"},
+                        sourcefield_type: {type: "string"}
+                    }
+                }
+            }
+        },
+        height: 340,
+        groupable: false,
+        edit: OnEdit,
+        sortable: true,
+        dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_sourcefields').data('kendoGrid').tbody.children();
+            },
+        filterable: true,
+        selectable: "row",
+        navigatable: true,
+        pageable: true,
+        resizable: true,
+        columns: [
+            {
+                field: "sourcefield_name",
+                title: "Source Field Name",
+                width: 70,
+                },{
+                    field:"source_type",
+                    title:"Source Type",
+                    width:30,
+                }],
+            editable: false,
+        });
+    }
+
+     function api_schedulecron_cond() {  
+         // if(hasActiveDataset == true) {
+         //        let text = "On changing Run Type, The Active Dataset will be changes to draft\n" +
+         //                   " Are You sure to change the Run Type ?  ";
+         //    jConfirm(text, "Connector", function (f) {
+         //  if (f == true) {
+         //      pplsave();
+         //  } else {
+         //       fetchppl($("#txt_ppl_gid").val());
+         //  }
+         //    });
+         // }
+
+          if ($('#api_run_type').val() == 'Scheduled Run') {
+              document.getElementById('api_txt_cronexpr').disabled = true;
+              document.getElementById("txt_cronexpr_s").style.display = "none";
+              document.getElementById('apibtn_editscheduler').disabled = false;
+              document.getElementById('apibtn_editscheduler').classList.remove('disabled');
+              document.getElementById('apibtn_editscheduler').classList.add('set_val');
+              $('#txt_cronexpr').val("");
+          } else {
+              $('#txt_cronexpr').val("");
+              document.getElementById('api_txt_cronexpr').disabled = true;
+              document.getElementById("txt_cronexpr_s").style.display = "none";
+              document.getElementById('apibtn_editscheduler').disabled = true;
+              document.getElementById('apibtn_editscheduler').classList.remove('set_val');
+              document.getElementById('apibtn_editscheduler').classList.add('disabled');
+              $("#api_txt_cronexpr").val("");
+          }
+      }
+
+      function getJsonStructure(obj) {
+        if (Array.isArray(obj)) {
+            // Handle array → take first element as representative
+            if (obj.length > 0) {
+                return [getJsonStructure(obj[0])];
+            } else {
+                return [];
+            }
+        } else if (typeof obj === "object" && obj !== null) {
+            // Handle objects → recurse for each key
+            const structure = {};
+            for (const key in obj) {
+                structure[key] = getJsonStructure(obj[key]);
+            }
+            return structure;
+        } else {
+            // Primitive types → replace with empty string or type name
+            return "";
+        }
+    }
+
+
+        function extractFirstLevelKeys(jsonString) {
+                let data = JSON.parse(jsonString);
+
+                // If it's an array → take first element
+                if (Array.isArray(data)) {
+                    data = data[0];
+                }
+
+                // If still not an object → return empty
+                if (typeof data !== "object" || data === null) {
+                    return [];
+                }
+
+                // Return 1st-level keys
+                return Object.keys(data);
+            }
+
+        function ApiCheckQuer(type){
+            var data = {};
+            if($("#txt_apiResponse").val()) {
+                data.JsonData = $("#txt_apiResponse").val();
+            } else {
+                data.JsonData = urlResponse;
+            }
+            // data.JsonData = $("#txt_apiResponse").val();
+            data.Query = $("#txt_api_filtercond").val();
+            $.ajax({
+                type: "POST",
+                url: '/Pipeline/ValidateApiQuery',
+                contentType: 'application/json; charset=utf-8',
+                data:JSON.stringify(data),
+                success: function (response) {
+                    if(response.isValid == true) {
+                        jAlert(response.message, "Connector");
+                        if(type == 'inclusion') {
+                            document.getElementById("btn_api_filtersave").disabled = false;
+                            document.getElementById("btn_api_rejectionsave").disabled = true;
+                        } else if(type == 'exclusion') {
+                            document.getElementById("btn_api_filtersave").disabled = true;
+                            document.getElementById("btn_api_rejectionsave").disabled = false;
+                        }                        
+                    } else {
+                        jAlert(response.message, "Connector");
+                        document.getElementById("btn_api_filtersave").disabled = true;
+                        document.getElementById("btn_api_rejectionsave").disabled = true;
+                    }
+
+                },
+                error: function (error) {
+                    jAlert('Failed to save result structure', "Connector");
+                }
+            });
+        }
+
+
+     function Apifiltercondsave(){
+         if($('#txt_api_gid').val()) {
+            var current_date = new Date;
+            var have_auth_checkbox = document.getElementById("txt_have_auth");
+            var havejsonresponse = $('#txt_apiResponse').val();
+            var pplapigid = $('#txt_api_gid').val();
+            const selected_type = document.querySelector('input[name="radioFilter"]:checked');
+            var data = {};
+            data.pipeline_code = $('#txt_ppl_code').val();
+            data.api_url = $('#url').val();
+            data.json_response = $('#txt_apiResponse').val() == "" ? "[]" : JSON.stringify($('#txt_apiResponse').val());
+            data.api_payload = $("#comment").val(),
+            data.api_method = $("#txt_method").val(),
+            data.api_payload_type = selected_type.value;
+            data.api_header =  getHeadersJson();
+            data.have_auth_url = have_auth_checkbox.checked ? "Y" : "N";
+            data.auth_url = havejsonresponse? "" : $('#txt_auth_url').val();
+            data.auth_user_name = havejsonresponse? "" : $('#txt_auth_user_name').val();
+            data.auth_user_pswd = havejsonresponse? "" : $('#txt_auth_user_pswd').val();
+            data.auth_token = $('#auth_token').val();
+            data.auth_type = $('#sel_auth').val();
+            data.auth_token_keyname = $('#txt_token_key').val();
+            data.remarks = "";
+            data.inclusion_filter_cond = $('#txt_api_filtercond').val();
+            data.rejection_filter_cond = $('#txt_api_rejectioncond').val();
+            data.delete_flag = "N";
+            data.api_gid = pplapigid;
+            data.updated_date = current_date;
+            data.updated_by = _user_code;
+                $.ajax({
+                    type: "Post",
+                    url: '@Url.Action("Updateexistingpplapiheader", "Pipeline")',
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response == "Record Updated Successfully.") {
+                            fetchpplapiheader();
+                            jAlert("Record Updated Successfully.", "Connector");
+                        }
+                    },
+                    error: function (er) {
+                        jAlert(er, "Error");
+                    }
+                });        
+            } else {
+                jAlert("Please Validate API", "Connector");
+            }
+     }
+
+     function parentChildRelation(){
+
+    var lbl_parentDS = document.getElementById('lbl_parentDS');
+    lbl_parentDS.innerHTML = "Parent Dataset Name -> " + selectedDataset;
+    $("#parentChild_Popup").show();
+       loadRSGrid();
+       loadmappedDSGrid();
+ }
 
 </script>
