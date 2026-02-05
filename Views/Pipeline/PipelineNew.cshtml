@@ -417,7 +417,7 @@
 
     .save {
         width: 100px;
-        background: #0fc9b7;
+        background: #118a2d;
         border-radius: 5px;
         font-weight: bold;
         color: #ffff;
@@ -610,7 +610,7 @@
     /*Blue Buttons*/
     #msform .action-button {
         width: 100px;
-        background: #0fc9b7;
+        background: #118a2d;
         border-radius: 5px;
         font-weight: bold;
         color: #ffff;
@@ -898,7 +898,7 @@
     }
 
     .bg-blue-400 {
-        background-color: #0fc9b7 !important;
+        background-color: #118a2d !important;
     }
 
     .text-white {
@@ -943,7 +943,7 @@
         } */
 
     .btntestconn {
-        background: #0fc9b7;
+        background: #118a2d;
         font-weight: bold;
         color: white;
         border: 0 none;
@@ -1003,7 +1003,7 @@
     #msform .action-button:focus-visible {
         outline: none; /* Removes the default outline */
 
-        border: 2px solid #0fc9b7;
+        border: 2px solid #118a2d;
     }
 
     .listicon {
@@ -1669,13 +1669,13 @@
                                             <div id="show_ds" style="margin-top: -5%;">
                                                                                             
                                                     <div id="btn_save" style="display: flex;justify-content: flex-end;padding-right: 20px;">
-                                                        <input style="padding: 1rem !important;cursor:pointer; height: 39px;margin-top: 20px;" type="button" onclick="fieldmapsave()" id='btn_fieldmapsave_new' class="save" value="Save" />
+                                                    <input style="padding: 1rem !important;cursor:pointer; height: 39px;margin-top: 20px;background: #3c8dbc !important; border:#3c8dbc;" type="button" onclick="fieldmapsave()" id='btn_fieldmapsave_new' class="save" value="Save" />
                                                         <input style="padding: 1rem !important;cursor:pointer;margin-left: 12px; color: red;background-color: white;border: 1px solid red;height: 39px;margin-top: 20px;" type="button" onclick="revert()" id='btn_fieldmapRevert' class="save" value="Revert" />
                                                         <div style="display: inline-flex; align-items: center; position: relative; margin-left: 12px;margin-right: 12px;">
                                                             <input type="button" id="btn_addnew" class="save" value="Expression" style="padding: 1rem 2.5rem 1rem 2.5rem !important; cursor: pointer; position: relative; z-index: 1;margin-top: 19px;" />
-                                                            <span class="button-icon" style="position: absolute; left: 0.5rem; z-index: 2;"> <i class="glyphicon glyphicon-plus" style="color: #175650 !important;margin-top: 20px;"></i>  </span>
+                                                            <span class="button-icon" style="position: absolute; left: 0.5rem; z-index: 2;"> <i class="glyphicon glyphicon-plus" style="color: #ffff !important;margin-top: 20px;"></i>  </span>
                                                         </div>
-                                                        <button class="save query_clr" style="margin-top: 19px;width: 150px;background-color: #1a5e19 !important;" id="btn_fin_chkquery" onclick="parentChildRelation()" type="button" name="btn_fin_chkquery">
+                                                        <button class="save query_clr" style="margin-top: 19px;width: 150px;background-color: #1a5e19 !important;" id="btn_PC_relation" onclick="parentChildRelation()" type="button" name="btn_fin_chkquery">
                                                             Parent Child Relation
                                                         </button>
                                                     </div>
@@ -1792,13 +1792,22 @@
                                                     <label>Upload Mode</label>
                                                     <span class="mandatory">*</span>
                                                     <select class="form-control" id="upload_mode" onchange="rejectduplicate_cond()" name="upload_mode">
+                                                         <option>--select--</option>
+                                                         <option>Append</option>
+                                                         <option>Delete and Insert</option>
+                                                         <option>Cascade Delete and Insert</option>
+                                                         <option selected>Insert or Update based on key</option>
+                                                         <option>Insert or Update based on key with log</option>
+                                                         <option>Truncate and Insert</option>
+                                                     </select>
+                                                   @*  <select class="form-control" id="upload_mode" onchange="rejectduplicate_cond()" name="upload_mode">
                                                         <option>--select--</option>
                                                         <option>Append</option>
                                                         <option>Truncate and Insert</option>
                                                          <option>Delete and Insert</option>
                                                          <option>Insert or Update based on key with log</option>
                                                         <option selected>Insert or Update based on key</option>                                                                                                               
-                                                    </select>
+                                                    </select> *@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Key Field</label>
@@ -2287,7 +2296,7 @@
                 return;
                 // Stay on same screen
             }
-            else if (current_fs.context.value == "Submit" && (v_upldmode == "Clean and Insert" || v_upldmode == "Truncate and Insert") &&
+            else if (current_fs.context.value == "Submit" && (v_upldmode == "Clean and Insert" || v_upldmode == "Truncate and Insert" || v_upldmode == "Delete and Insert") &&
                 (checkbox.checked == false && v_duplicate_mode != "Abort on Duplicates") &&
                 $("#keyfield_drp").val() != undefined) {
                 jAlert("Please Check the Reject Duplicates (or) remove the keyfield..!", "Connector");
@@ -4304,7 +4313,7 @@
                return;
            }
 
-           if ((v_upldmode == "Clean and Insert" || v_upldmode == "Truncate and Insert") &&
+           if ((v_upldmode == "Clean and Insert" || v_upldmode == "Truncate and Insert" || v_upldmode == "Delete and Insert") &&
                (checkbox.checked == false && v_duplicate_mode != "Abort on Duplicates") &&
                $("#keyfield_drp").val() != undefined) {
                jAlert("Please Check the Reject Duplicates (or) remove the keyfield..!", "Connector");
@@ -5915,7 +5924,7 @@
 
       }
       function rejectduplicate_cond1() {
-    if ($('#upload_mode').val() == 'Clean and Insert' || $('#upload_mode').val() == "Truncate and Insert") {
+    if ($('#upload_mode').val() == 'Clean and Insert' || $('#upload_mode').val() == "Truncate and Insert" || $('#upload_mode').val() == "Delete and Insert") {
               document.getElementById("chkbox_rejduplicate").checked = false;
               document.getElementById("chkbox_rejduplicate").disabled = true;
           }
@@ -9341,17 +9350,21 @@
                             has_fieldmapsaved = data[0].has_saved;
                             var nextButton = document.getElementById('btn_nextppl2');
                             var expressionButton = document.getElementById('btn_addnew');
+                            var pcRelationButton = document.getElementById('btn_PC_relation');
                             if(has_fieldmapsaved === "true") {
                                 nextButton.disabled = false;
                                 expressionButton.disabled = false;
+                                pcRelationButton.disabled = false;
                             } else {
                                  var activeTabId = $('#cc_progressbar li.active').attr('id');
                                   if(activeTabId === 'fieldmappingTab') {
                                       nextButton.disabled = true;
                                       expressionButton.disabled = true;
+                                      pcRelationButton.disabled = true
                                 } else {
                                      nextButton.disabled = false;
                                      expressionButton.disabled = false;
+                                     pcRelationButton.disabled = false;
                                 }
 
                             }
@@ -9472,7 +9485,7 @@
         } else if (radio4.checked) {
             v_duplicate_mode = "Continue With Duplicates";
         }
-            if(v_keydrop.checked == false && v_duplicate_mode == 'Continue With Duplicates' && (upldmode == 'Clean and Insert' || upldmode == 'Truncate and Insert' )){
+            if(v_keydrop.checked == false && v_duplicate_mode == 'Continue With Duplicates' && (upldmode == 'Clean and Insert' || upldmode == 'Truncate and Insert' || upldmode == "Delete and Insert" )){
                 document.getElementById("keyfield_drp_s").style.display = "none";
                  $("#keyfield_drp").data("kendoMultiSelect").enable(false);
         } else {
@@ -9488,7 +9501,7 @@
                 <label style="font-weight: bold;">New Custom Date Format</label><br/>
                 <input type='text' id='newFormatInput' class='k-textbox' style='width: 100%; margin-top: 8px;' placeholder='e.g., yyyy-MM-dd' /><br/>
                 <div style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
-                            <button id='saveFormatBtn' style='background: #0fc9b7;color: #ffff;width: 50px; border-radius: 5px;border:#0fc9b7;'>Save</button>
+                            <button id='saveFormatBtn' style='background: #118a2d;color: #ffff;width: 50px; border-radius: 5px;border:#118a2d;'>Save</button>
                     <button id='closeFormatBtn' style='color: red;background-color: white;border: 1px solid red;width: 50px; border-radius: 5px;'>Close</button>
                 </div>
             </div>
@@ -10613,13 +10626,82 @@
             }
      }
 
-     function parentChildRelation(){
-
+  function parentChildRelation(){
     var lbl_parentDS = document.getElementById('lbl_parentDS');
     lbl_parentDS.innerHTML = "Parent Dataset Name -> " + selectedDataset;
-    $("#parentChild_Popup").show();
-       loadRSGrid();
-       loadmappedDSGrid();
+       loadRSGrid([]);
+      getmappedParentChildList();
+       getParentFieldList();       
+       loadchilddataset();
+        $("#parentChild_Popup").show();
  }
+
+ function getParentFieldList() {
+        var ParentDS = $('#txtds_code').val();
+        var data = {};
+        data.in_pipeline_code = $("#txt_ppl_code").val();
+        data.in_dataset_code = ParentDS;
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getAllDatasetFields", "Pipeline")',
+            async: false,
+            dataType: "json",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var res = JSON.parse(data);
+                if(res.length > 0) {
+                    parentDSFields = res;                                       
+                }
+            },
+            error: function (er) {
+                jAlert(er, "Error");
+            }
+            });
+ }
+
+   function getmappedParentChildList(){
+       var childDSCode;
+          var combo = $("#drp_child_dataset").data("kendoComboBox");
+          if (combo) {
+            var item = combo.dataItem();
+            if (item) {
+                childDSCode = item.dataset_code;
+            }
+        }
+       var ParentDS = $('#txtds_code').val();
+       var pipelineCode = $("#txt_ppl_code").val();
+       $.ajax({
+           type: 'GET',
+           url: '@Url.Action("GetparentchildRelationlist", "Pipeline")',
+           data: {
+               pipeline_code: pipelineCode,                  
+               dataset_code: ParentDS,
+               child_ds_code: childDSCode ? childDSCode : ""
+           },
+           dataType: "json",
+           success: function (data) {
+                var res = JSON.parse(data);
+                if (res.Table && res.Table.length > 0 && res.Table1.length == 0) {
+                      loadRSGrid(res.Table);
+                      loadmappedDSGrid([]);
+                  } else if(res.Table1 && res.Table1.length > 0 && res.Table.length == 0){
+                      loadmappedDSGrid(res.Table1);
+                      loadRSGrid([]);
+                  }
+                    else if(res && res.Table1.length > 0 && res.Table.length > 0){
+                        loadRSGrid(res.Table);
+                        loadmappedDSGrid(res.Table1);                    
+                  } else {
+                    loadRSGrid([]);
+                    loadmappedDSGrid([]);
+                    addPCFieldRow();
+               }
+           },
+           error: function (xhr) {
+               jAlert(xhr.responseText, "Error");
+           }
+       });
+   }
 
 </script>

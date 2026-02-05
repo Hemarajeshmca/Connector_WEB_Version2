@@ -1002,7 +1002,6 @@ namespace FlexicodeConnectors.Controllers
 
         [HttpPost]
         public async Task<JsonResult> pplfieldmapupdatelist([FromBody] List<DatasetfieldModel> objpplmapupdlist)
-        //public async Task<JsonResult> pplfieldmapupdatelist([FromBody] List<pplFieldMapping> objpplmapupdlist)
         {
             var results = "";
             var json = JsonConvert.SerializeObject(objpplmapupdlist);
@@ -2504,7 +2503,6 @@ namespace FlexicodeConnectors.Controllers
 
             var json = JsonConvert.SerializeObject(supportingdocList);
             var stringContent = new StringContent(gridDataJson, UnicodeEncoding.UTF8, "application/json");
-            //var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
             ConnectorApi _api = new ConnectorApi(_configuration);
             HttpClient client = _api.Initial();
             HttpResponseMessage res = await client.PostAsync("Pipeline/supportingDoc", stringContent);
@@ -2555,22 +2553,13 @@ namespace FlexicodeConnectors.Controllers
             ConnectorApi _api = new ConnectorApi(_configuration);
             HttpClient client = _api.Initial();
             HttpResponseMessage res = await client.GetAsync("Pipeline/GetSupportDocs?pipeline_code=" + pipeline_code);
-            //var resultss = await res.Content.ReadAsStringAsync(); 
-            //string resultsd = await res.Content.ReadAsStringAsync();
-            //var outerList = JsonConvert.DeserializeObject<List<List<SupportingDoc>>>(resultsd);
-            //var supportDocs = outerList.FirstOrDefault() ?? new List<SupportingDoc>();
             if (res.IsSuccessStatusCode)
             {
                 string resultJson = res.Content.ReadAsStringAsync().Result;
                 sourcefieldlist = (List<SupportingDoc>)JsonConvert.DeserializeObject<List<SupportingDoc>>(resultJson);
             }
-            //sourcefieldlist = JsonConvert.DeserializeObject<List<SupportingDoc>>(resultJson);
-            //    SupportingDoc doc = JsonConvert.DeserializeObject<SupportingDoc>(resultJson);
-            //    Console.WriteLine(doc.pipeline_code);  // Output: PIPE_001
-
             return Json(sourcefieldlist);
         }
-
 
         [HttpGet]
         public IActionResult SupportDocsdownload(string dbfileName, string filename)
@@ -2599,6 +2588,7 @@ namespace FlexicodeConnectors.Controllers
             }
 
         }
+        
         [HttpPost]
         public async Task<JsonResult> deleteSupportDocs(int id)
         {
@@ -2620,7 +2610,7 @@ namespace FlexicodeConnectors.Controllers
 
 
         
-             [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Addpplapisrcfield(string pipeline_code, string dataset_code, string user_code, string datasetinsert, [FromBody] Dictionary<string, object> resultSetStructure)
         {
             var results = "";
@@ -2832,7 +2822,6 @@ namespace FlexicodeConnectors.Controllers
             return columns;
         }
 
-
         public static HashSet<string> GetAllJsonKeys(string jsonData)
         {
             var keys = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
@@ -2857,5 +2846,82 @@ namespace FlexicodeConnectors.Controllers
             Traverse(JToken.Parse(jsonData));
             return keys;
         }
+
+        //getAllDatasetFields
+
+        [HttpPost]
+        public async Task<JsonResult> getAllDatasetFields([FromBody] getAllDatasetFieldsModel objgetAllDatasetFields)
+        {
+            try
+            {
+                var results = "";
+                var json = JsonConvert.SerializeObject(objgetAllDatasetFields);
+                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+                ConnectorApi _api = new ConnectorApi(_configuration);
+                HttpClient client = _api.Initial();
+                HttpResponseMessage res = await client.PostAsync("Dataset/getAllDatasetFields", stringContent);
+                if (res.IsSuccessStatusCode)
+                {
+                    results = res.Content.ReadAsStringAsync().Result;
+                }
+                return Json(results);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
+        }
+        //parentchildrelation 
+        public async Task<JsonResult> parentchildrelation([FromBody] List<parentchildRelation> objparentchildRelation)
+        {
+            var results = "";
+            var json = JsonConvert.SerializeObject(objparentchildRelation);
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+            ConnectorApi _api = new ConnectorApi(_configuration);
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.PostAsync("Pipeline/Parentchildrelation", stringContent);
+            if (res.IsSuccessStatusCode)
+            {
+                results = res.Content.ReadAsStringAsync().Result;
+            }
+            return Json(results);
+        }
+
+        // GetparentchildRelationlist
+        [HttpGet]
+        public async Task<JsonResult> GetparentchildRelationlist(string pipeline_code, string dataset_code, string child_ds_code = "")
+        {
+            List<parentchildRelation> parentChildRelationlist = new List<parentchildRelation>();
+            var results = "";
+            ConnectorApi _api = new ConnectorApi(_configuration);
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.GetAsync("Dataset/GetparentchildRelationlist?pipeline_code=" + pipeline_code + "&dataset_code=" + dataset_code + "&child_ds_code=" + child_ds_code);
+            if (res.IsSuccessStatusCode)
+            {
+                results = res.Content.ReadAsStringAsync().Result;
+            }
+            return Json(results);
+            //if (res.IsSuccessStatusCode)
+            //{
+            //    results = res.Content.ReadAsStringAsync().Result;
+            //    parentChildRelationlist = (List<parentchildRelation>)JsonConvert.DeserializeObject<List<parentchildRelation>>(results);
+            //}
+            //return Json(parentChildRelationlist);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> Deleteexistingchild_ds(string pipeline_code, string parent_ds_code, string child_ds_code = "")
+        {
+            var results = "";
+            ConnectorApi _api = new ConnectorApi(_configuration);
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.DeleteAsync("Pipeline/Deleteexistingchild_ds?pipeline_code=" + pipeline_code + "&parent_ds_code=" + parent_ds_code + "&child_ds_code=" + child_ds_code);
+            if (res.IsSuccessStatusCode)
+            {
+                results = res.Content.ReadAsStringAsync().Result;
+            }
+            return Json(results);
+        }
+
     }
 }

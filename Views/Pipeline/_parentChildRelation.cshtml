@@ -8,6 +8,19 @@
         width: 95%;
         margin: 14% !important;
     }
+
+    #ds_gridmapping .k-header .k-grid-toolbar, .k-input, .k-textbox .a .span {
+        background-image: none, linear-gradient(to bottom, rgb(250, 250, 250) 0, rgb(250, 250, 250) 100%) !important;
+    }
+
+    .child-dataset-wrapper + .k-animation-container {
+        top: 195px !important;
+        width: 378px !important;
+    }
+
+    .icon_color {
+        color: #fff !important;
+    }
 </style>
 <div class="modal" tabindex="-1" role="dialog" id="parentChild_Popup" aria-hidden="true">
     <div class="modal-dialog modal-custom" role="dialog">
@@ -25,12 +38,9 @@
                         <div class="row">
                             <label class="form-label">Child Dataset</label>
                             <span style="display:inline;" class="mandatory">*</span>
-                                <select class="form-control" onchange="getChildFieldList($('#drp_child_dataset').val())" id="drp_child_dataset" name="drp_child_dataset" style="width:100%;height:25%">
-                                <option value="-- Select --">-- Select --</option>
-                                <option value="Order_Details">Order Details</option>
-                                <option value="Invoice_Details">Invoice Details</option>
-                                <option value="PO_Order">PO Order</option>
-                            </select>
+                            <div class="child-dataset-wrapper">
+                            <input id="drp_child_dataset" />        
+                            </div>
                         </div>
                         <div class="row">
                             <div id="mapped_ds_grid"></div>
@@ -44,130 +54,88 @@
                 <div style="margin-top: 11px;">
                     <input style="float: right;margin-top: 0%;" type="button" onclick="closeMappings()" class="cancel action-button-previous" value="Cancel" />
                     <input style="float: right;margin-right: 0%;" type="button" onclick="saveMappings()" class="save" value="Save" />
-                    <input style="float: right;margin-right: 1%; margin-top: 1px;" type="button" onclick="deleteMappings()" class="cancel" value="Delete" />
                 </div>            
             </div>
             </div>
-
-    @*     <div class="modal-footer">
-            <div style="margin-top: 2%;">
-                <input style="float: right;margin-top: 0%;" type="button" onclick="closeMappings()" class="cancel action-button-previous" value="Cancel" />
-                <input style="float: right;margin-right: 0%;" type="button" onclick="saveMappings()" class="save" value="Save" />
-            </div>
-            </div>
-        </div> *@
-
     </div>
 </div>
 
 
 <script>
 
-    var parentDatasets = [
-        { id: "ORD", name: "Order" },
-        { id: "INV", name: "Invoice" },
-        { id: "PO", name: "Purchase Order" }
-    ];
+    // Global Variables
+    var parentDSFields;
+    var childDSFields;
 
-    var childDatasets = [
-        { id: "ORD_DTL", parentId: "ORD", name: "Order Details" },
-        { id: "INV_DTL", parentId: "INV", name: "Invoice Details" },
-        { id: "PO_DTL", parentId: "PO", name: "PO Details" }
-    ];
+    function loadchilddataset() {
+        var excelheader = "";
+        var datasetType = "All";
+        var pipeline_code = $("#txt_ppl_code").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetDataSet", "Pipeline")?pipeline_code='+pipeline_code+"&source_fields="+excelheader+"&datasetType="+datasetType,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if(data.length > 0){
+                var parent_datasetcode = $("#txtds_code").val();
+                 var child_datasets = data.filter(item => item.dataset_code != parent_datasetcode);
+                 var combo = $("#drp_child_dataset").kendoComboBox({
+                                dataTextField: "dataset_name",
+                                dataValueField: "dataset_code",
+                                dataSource: child_datasets,
+                                placeholder: "-- Select --",
+                                filter: "contains",
+                                suggest: true,
+                                open: function () {
+                                    this.list.width(378);
+                                    this.popup.wrapper.width(378);
+                                },
+                                change: function(e) {                                   
+                                   getmappedParentChildList();
+                                   changeChidDS($(this.element));
+                                }
+                            }).data("kendoComboBox");
+                }
+            },
+            error: function (er) {
+                jAlert(er, "Error");
+            }
+        });
+    }
+
+     function changeChidDS(ds){
+           var data = {};
+           data.in_pipeline_code = $("#txt_ppl_code").val();
+           data.in_dataset_code = ds.val();
+           $.ajax({
+                type: 'POST',
+                url: '@Url.Action("getAllDatasetFields", "Pipeline")',
+                async: false,
+                dataType: "json",
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var res = JSON.parse(data);
+                    if(res.length > 0) {
+                        childDSFields = res;
+                        getmappedParentChildList();
+                        changeChidDS($(this.element));
+                        addPCFieldRow();
+                    }
+                },
+                error: function (er) {
+                    jAlert(er, "Error");
+                }
+               });
+      }
 
     function closeMappings() {
         $("#parentChild_Popup").hide();
-    }
-
-    function pcRelationlistgrid(data) {
-        try {
-            $("#PC_relationListGrid").kendoGrid({
-                dataSource: {
-                    data: data,
-                    schema: {
-                        model: {
-                            fields: {
-                                parent_child_gid: { type: "string" },
-                                pipeline_code: { type: "string" },
-                                parent_dataset_code: { type: "string" },
-                                parent_dataset_name: { type: "string" },
-                                child_dataset_code: { type: "string" },
-                                child_dataset_name: { type: "string" },
-                                parent_keyfield: { type: "string" },
-                                child_keyfield: { type: "string" },
-                            }
-                        }
-                    },
-                    pageSize: 10
-                },
-                dataBound: function () {
-                    mergeGridColumn(this, "child_dataset_name");
-                },
-                height: 200,
-                width: 1058,
-                pageable: true,
-                sortable: true,
-                filterable: true,
-                selectable: "single",
-                columns: [
-                    {
-                        field: "Action",
-                        title: "Action",
-                        template: function (dataItem) {                            
-                                return `<div style='text-align:center;'>
-                                <i class='glyphicon glyphicon-pencil' style='color:green;cursor: pointer;' onclick='editpipeline($(this))' title='Edit'></i> &nbsp
-                                <i class='glyphicon glyphicon-trash' style='color:red;cursor: pointer;' onclick='deletepipeline($(this))' title='Delete'></i> &nbsp
-                                </div>`;                            
-                        },
-                        filterable: false,
-                        sortable: false,
-                        width: 30,
-                    },
-                    {
-                        field: "pipeline_code",
-                        title: "pipeline_code",
-                        width: 100,
-                        hidden: true
-                    },
-                    {
-                        field: "parent_dataset_code",
-                        title: "parent_dataset_code",
-                        width: 100,
-                        hidden: true
-                    },
-                    {
-                        field: "parent_dataset_name",
-                        title: "parent_dataset_name",
-                        width: 100,
-                        hidden: true
-                    },
-                    {
-                        field: "child_dataset_code",
-                        title: "child_dataset_code",
-                        width: 100,
-                        hidden: true
-                    },
-                    {
-                        field: "child_dataset_name",
-                        title: "Child Dataset",
-                        width: 100,
-                    },
-                    {
-                        field: "parent_keyfield",
-                        title: "Parent Key Field",
-                        width: 100,
-                    },
-                    {
-                        field: "child_keyfield",
-                        title: "Child Key Field",
-                        width: 100,
-                    }],
-                resizable: true
-
-            });           
-        }
-        catch (err) {
-            alert(err);
+        var combo = $("#drp_child_dataset").data("kendoComboBox");
+        if (combo) {
+            combo.value("");
+            combo.text("");
         }
     }
 
@@ -256,83 +224,110 @@
       return data;
     }
 
-    function getChildFieldList(CDS){
-        loadRSGrid();
-    }
-
-    function loadRSGrid(){
+    function loadRSGrid(dataSource){
        $("#ds_gridmapping").remove();
        $('#pc_mappingGrid').append('<div id="ds_gridmapping" style="height: 300px;"></div>');
        $("#ds_gridmapping").kendoGrid({
         dataSource: {
-            data: [{
-                parent_dataset: "",
-                child_dataset: "",
-                field_mapped: "N"
-            }],
+            data:dataSource,
             schema: {
                 model: {
-                    id: "id",
+                    id: "parentchild_rel_gid",
                     fields: {
-                        field_mapped: { type: "string" },
-                        parent_dataset: { type: "string" ,editable: true },
-                        child_dataset: { type: "string" ,editable: true },
+                        field_mapped: { type: "string", defaultValue: "N" },
+                        parentchild_rel_gid: { type: "string" },
+                        pipeline_code: { type: "string" },
+                        parent_ds_code: { type: "string" },
+                        parent_dskeyfield: { type: "string" },
+                        parent_field_name: { type: "string" },
+                        child_ds_code: { type: "string" },
+                        child_ds_name: { type: "string" },
+                        child_dskeyfield: { type: "string" },
+                        child_field_name: { type: "string" }
                     }
                 }
             }
-        },       
-         toolbar: "<a href='javascript:void(0)' onclick='addPCFieldRow()' >" +
-                   "<span class='glyphicon glyphicon-plus' style='color: white !important;'></span></a>",
+        },
+         toolbar:
+            "<a href='javascript:void(0)' onclick='addPCFieldRow()'>" +
+            "<span class='glyphicon glyphicon-plus icon_color'></span></a>",
+           
+       
+
         editable: true,
         columns: [
              {
                 field: "field_mapped",
                 title: "Enable",
                 filterable: false,
-                template: function (dataItem) {
-                   return '<input style="text-align:center;" type="checkbox" class="chkbxFieldmapping" ' + ((dataItem.field_mapped == "Y")  ? 'checked="checked"' : '') + '/>'
-                },
-                width: 30
+                template:
+                "<input type='checkbox' class='chkbx_pc_ds' " +
+                "# if (child_dskeyfield) { #" +
+                " checked='checked' " +
+                "# } # />",
+                // "<input type='checkbox' class='chkbx_pc_ds' " +
+                // "#= field_mapped === 'Y' ? 'checked=checked' : '' # />",   
+                width: 80
              },
+              { field: "parentchild_rel_gid", hidden: true },
+            { field: "pipeline_code", hidden: true },
+            { field: "parent_ds_code", hidden: true },
+            { field: "child_ds_code", hidden: true },
             {
-                field: "parent_dataset",
-                title: "Parent Dataset",
-                editor: parentDatasetEditor,              
+                field: "parent_field_name",
+                title: "Parent Dataset Field",
+                editor: parentDatasetEditor,
             },
             {
-                field: "child_dataset",
-                title: "Child Dataset",
-                editor: childDatasetEditor,               
+                field: "child_field_name",
+                title: "Child Dataset Field",
+                editor: childDatasetEditor,
             },
-           
+            { field: "child_dskeyfield", hidden: true },
+            { field: "parent_dskeyfield", hidden: true }            
         ]
     });
     }
 
-    function loadmappedDSGrid(){       
+    $(document).on("change", ".chkbx_pc_ds", function () {
+        var grid = $("#ds_gridmapping").data("kendoGrid");
+        var dataItem = grid.dataItem($(this).closest("tr"));
+
+        dataItem.set("field_mapped", this.checked ? "Y" : "N");
+    });
+
+    function loadmappedDSGrid(dataSource){       
        $("#grid_mappedDS").remove();
        $('#mapped_ds_grid').append('<div id="grid_mappedDS" style="height: 220px; margin-top: 20px;"></div>');
        $("#grid_mappedDS").kendoGrid({
         dataSource: {
-            data: [{
-                parent_dataset: "Invoice Dataset",
-                child_dataset: "",
-                field_mapped: "N"
-            }],
+            data: dataSource,
             schema: {
                 model: {
-                    id: "id",
+                    id: "parentchild_rel_gid",
                     fields: {
-                        field_mapped: { type: "string"},
-                        parent_dataset: { type: "string"},
-                        child_dataset: { type: "string"},
+                        action: { type: "string"},
+                        parent_ds_code: { type: "string" },
+                        child_ds_code: { type: "string" },
+                        child_ds_name: { type: "string" },
                     }
                 }
             }
         },        
-        columns: [            
+        columns: [   
+             {
+                field: "action",
+                title: "Action",
+                encoded: false,
+                template:
+                    "<input type='radio' name='childDsSelect' class='rd_child_ds' />" +
+                    "<i class='glyphicon glyphicon-trash btn-delete-childds' onclick='delete_child_ds($(this))'" +
+                    "style='color:red; margin-left:12px; cursor:pointer;'></i>",
+                // template: "<i class='glyphicon glyphicon-trash' onclick='delete_child_ds($(this))' style='color:red;margin-left: 40% !important'></i>",
+                width: 60
+            },
             {
-                field: "parent_dataset",
+                field: "child_ds_name",
                 title: "Mapped Child Dataset",
             },
         ]
@@ -340,55 +335,176 @@
     }
 
     function parentDatasetEditor(container, options) {
-        var select = $("<select name='" + options.field + "' class='k-input k-textbox' style='width:100%'></select>");
+        var select = $("<select class='k-input k-textbox' style='width:100%'></select>");
         select.append("<option value=''>-- Select Parent --</option>");
-        $.each(parentDatasets, function (i, item) {
-            select.append("<option value='" + item.id + "'>" + item.name + "</option>");
+        $.each(parentDSFields, function (i, item) {
+            select.append(
+                $("<option></option>")
+                    .val(item.dataset_field_name)
+                    .text(item.dataset_field_desc)
+            );
         });
-        select.appendTo(container);
-        // set existing value (edit mode)
-        select.val(options.model[options.field]);
-        // clear child when parent changes
+
+        select.appendTo(container);       
+        select.val(options.model.parent_field_name);
         select.on("change", function () {
-            options.model.set("child_dataset", "");
+            var selectedCode = this.value;
+            var selectedText = $(this).find("option:selected").text();
+            options.model.set("parent_dskeyfield", selectedCode);
+            options.model.set("parent_field_name", selectedText);
+            options.model.set("child_dskeyfield", "");
+            options.model.set("child_field_name", "");
         });
     }
 
     function childDatasetEditor(container, options) {
-        var parentValue = options.model.parent_dataset;
-        var select = $("<select name='" + options.field + "' class='k-input k-textbox' style='width:100%'></select>");
+         var select = $("<select class='k-input k-textbox' style='width:100%'></select>");
         select.append("<option value=''>-- Select Child --</option>");
-        $.each(childDatasets, function (i, item) {
-            if (item.parentId === parentValue) {
-                select.append("<option value='" + item.id + "'>" + item.name + "</option>");
-            }
+        $.each(childDSFields, function (i, item) {
+            select.append(
+                $("<option></option>")
+                    .val(item.dataset_field_name)
+                    .text(item.dataset_field_desc)
+            );
         });
         select.appendTo(container);
-        // set existing value
-        select.val(options.model[options.field]);
+         if (options.model.child_field_name) {
+            select.val(options.model.child_field_name);
+        }
+        select.on("change", function () {
+            var selectedCode = this.value;
+            var selectedText = $(this).find("option:selected").text();
+            options.model.set("child_dskeyfield", selectedCode);
+            options.model.set("child_field_name", selectedText);
+            var mapped = selectedCode ? "Y" : "N";
+            options.model.set("field_mapped", mapped);
+        });
     }
 
     function addPCFieldRow() {
           var parent_dscode = $("#txtds_code").val();
           var ppl_code = $("#txt_ppl_code").val();
-          var grid = $("#ds_gridmapping").data("kendoGrid");
-          var dataSource = grid.dataSource;    
-          var newRow = dataSource.add({             
-              parent_dataset: "",
-              child_dataset: "",              
-          });
-          newRow.dirty = true;
-          dataSource.sync();
-          grid.refresh();
-          var lastRow = grid.tbody.find("tr").last();
-          grid.editRow(lastRow);
+          var childDSCode;
+          var combo = $("#drp_child_dataset").data("kendoComboBox");
+          if (combo) {
+            var item = combo.dataItem();
+            if (item) {
+                childDSCode = item.dataset_code;
+            }
+        }
+        if(childDSCode) {
+            var grid = $("#ds_gridmapping").data("kendoGrid");
+            grid.dataSource.add({
+                    field_mapped: "N",
+                    parentchild_rel_gid: "0",
+                    pipeline_code: ppl_code,
+                    parent_ds_code: parent_dscode,
+                    parent_dskeyfield: "",
+                    parent_field_name: "",
+                    child_ds_code: childDSCode,
+                    child_ds_name: "",
+                    child_dskeyfield: "",
+                    child_field_name: ""
+            });
+            var lastRow = grid.tbody.find("tr:last");
+            grid.editRow(lastRow);              
+              setTimeout(function () {
+                var cellIndex = grid.columns.findIndex(c => c.field === "parent_dskeyfield");
+                if (cellIndex !== -1) {
+                    var cell = lastRow.find("td:eq(" + cellIndex + ")");
+                    grid.editCell(cell);
+                }
+            }, 0);
+        } else {
+            jAlert("Please Select Child Dataset", "Connector");
+        }
+
       }
 
-    function deleteMappings(){
+    function saveMappings(){
+         var grid = $("#ds_gridmapping").data("kendoGrid");
+         grid.dataSource.sync();
+         var items = grid.dataSource._data;
+         $.ajax({
+         type: "Post",
+         url: '@Url.Action("parentchildrelation", "Pipeline")',
+         data: JSON.stringify(items),
+         dataType: "json",
+         contentType: 'application/json; charset=utf-8',
+         success: function (response) {
+             if(response) {
+                 jAlert(response, "Connector");
+                 var combo = $("#drp_child_dataset").data("kendoComboBox");
+                    if (combo) {
+                        combo.value("");
+                        combo.text("");
+                    }
+                 getmappedParentChildList();
+             } else {
+                 jAlert("Something went Wrong", "Connector");
+             }
+         },
+         error: function (er) {
+             jAlert(er, "Error");
+         }
+     });
+    }
+
+    function delete_child_ds(e) {
+           let text = "Are you sure to delete?";
+           jConfirm(text, "Connector", function (f) {
+               if (f == true) {
+                   var entityGrid = $("#grid_mappedDS").data("kendoGrid");
+                   var child_ds_code = entityGrid.dataItem(e.select().closest("tr")).child_ds_code;
+                   var parent_ds_code = $('#txtds_code').val();
+                   var pipeline_code = $("#txt_ppl_code").val();
+                   $.ajax({
+                       type: "GET",
+                       url: '@Url.Action("Deleteexistingchild_ds", "Pipeline")',
+                        data: {
+                           pipeline_code: pipeline_code,
+                           parent_ds_code: parent_ds_code,
+                           child_ds_code: child_ds_code
+                       },
+                       dataType: "json",
+                       contentType: 'application/json; charset=utf-8',
+                       success: function (response) {
+                           jAlert(response, "Connector", function (g) {
+                               if (g == true) {
+                                  getmappedParentChildList();
+                               }
+                           });                          
+                       },
+                       error: function (er) {
+                           jAlert(er, "Error");
+                       }
+                   });
+               }
+               else {
+                   text = "You canceled!";
+               }
+           });
 
     }
-  
-       
 
+     $(document).on("change", ".rd_child_ds", function () {
+        var grid = $("#grid_mappedDS").data("kendoGrid");
+        if (!grid) return;
+
+        var row = $(this).closest("tr");
+        var dataItem = grid.dataItem(row);
+
+        if (!dataItem) {
+            console.error("No dataItem found for row", row);
+            return;
+        }
+        var childDsCode  = dataItem.child_ds_code;
+        var combo = $("#drp_child_dataset").data("kendoComboBox");
+        if (combo && childDsCode) {
+            combo.value(childDsCode);
+            combo.trigger("change");
+        }
+         getmappedParentChildList();
+    });
 
 </script>

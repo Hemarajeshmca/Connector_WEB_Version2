@@ -442,4 +442,31 @@ namespace FlexicodeConnectors.Models
         public string JsonData { get; set; }
         public string Query { get; set; }
     }
+
+    public class getAllDatasetFieldsModel
+    {
+        public string in_pipeline_code { get; set; }
+        public string in_dataset_code { get; set; }
+    }
+
+    public class parentchildRelation
+    {
+        public string parentchild_rel_gid { get; set; }
+        public string pipeline_code { get; set; }
+        public string seq_no { get; set; }
+        public string parent_ds_code { get; set; }
+        public string parent_dskeyfield { get; set; }
+        public string child_ds_code { get; set; }
+        public string child_dskeyfield { get; set; }
+        public string remarks { get; set; }
+        public string child_ds_name { get; set; }
+        public string parent_field_name { get; set; }
+        public string child_field_name { get; set; }
+
+        //public DateTime created_date { get; set; }
+        //public string created_by { get; set; }
+        //public DateTime update_date { get; set; }
+        //public string updated_by { get; set; }
+        // public string delete_flag { get; set; }
+    }
 }
