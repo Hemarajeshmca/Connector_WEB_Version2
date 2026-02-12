@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|e:\\user\\hema\\connectors\\git\\web_versions\\v2.3.1\\flexiconnectorsweb\\helper\\controllers\\pipelinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|solutionrelative:helper\\controllers\\pipelinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|e:\\user\\hema\\connectors\\git\\web_versions\\v2.3.1\\flexiconnectorsweb\\views\\pipeline\\pipelinenew.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|solutionrelative:views\\pipeline\\pipelinenew.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|e:\\user\\hema\\connectors\\git\\web_versions\\v2.3.1\\flexiconnectorsweb\\models\\pipelinemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|solutionrelative:models\\pipelinemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|e:\\user\\hema\\connectors\\git\\web_versions\\v2.3.1\\flexiconnectorsweb\\views\\pipeline\\_datasetclone.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|solutionrelative:views\\pipeline\\_datasetclone.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|e:\\user\\hema\\connectors\\git\\web_versions\\v2.3.1\\flexiconnectorsweb\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B1006B8F-4E42-492B-A7B0-9264305EA997}|FlexicodeConnectors.csproj|solutionrelative:startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_datasetClone.cshtml",
+              "DocumentMoniker": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Views\\Pipeline\\_datasetClone.cshtml",
+              "RelativeDocumentMoniker": "Views\\Pipeline\\_datasetClone.cshtml",
+              "ToolTip": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Views\\Pipeline\\_datasetClone.cshtml",
+              "RelativeToolTip": "Views\\Pipeline\\_datasetClone.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-26T09:05:05.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PipelineModel.cs",
+              "DocumentMoniker": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Models\\PipelineModel.cs",
+              "RelativeDocumentMoniker": "Models\\PipelineModel.cs",
+              "ToolTip": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Models\\PipelineModel.cs",
+              "RelativeToolTip": "Models\\PipelineModel.cs",
+              "ViewState": "AgIAAGgBAAAAAAAAAAAgwHEBAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-26T05:39:18.908Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Startup.cs",
+              "RelativeDocumentMoniker": "Startup.cs",
+              "ToolTip": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Startup.cs",
+              "RelativeToolTip": "Startup.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAIwCkAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-25T14:07:25.172Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PipelineNew.cshtml",
+              "DocumentMoniker": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Views\\Pipeline\\PipelineNew.cshtml",
+              "RelativeDocumentMoniker": "Views\\Pipeline\\PipelineNew.cshtml",
+              "ToolTip": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Views\\Pipeline\\PipelineNew.cshtml",
+              "RelativeToolTip": "Views\\Pipeline\\PipelineNew.cshtml",
+              "ViewState": "AgIAAJ0iAAAAAAAAAAAowKkiAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-25T13:55:56.319Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PipelineController.cs",
+              "DocumentMoniker": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Helper\\Controllers\\PipelineController.cs",
+              "RelativeDocumentMoniker": "Helper\\Controllers\\PipelineController.cs",
+              "ToolTip": "E:\\user\\hema\\Connectors\\GIT\\WEB_versions\\V2.3.1\\FlexiconnectorsWeb\\Helper\\Controllers\\PipelineController.cs",
+              "RelativeToolTip": "Helper\\Controllers\\PipelineController.cs",
+              "ViewState": "AgIAABQFAAAAAAAAAAAuwBoFAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-25T07:52:26.311Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
